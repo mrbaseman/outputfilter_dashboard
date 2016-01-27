@@ -1,40 +1,10 @@
 
-TODO for the first public relase
-
-- get rid of pmf                                -> done
-- update documentation				-> done  
-- improve checks for the patches                -> done
-- update list of known modules                  -> done
-- check use of eval                             -> done
-
-minor issues
-============
-
-- check docu, images, css -> done
-
-- header/footer/js-functions -> fixed, still to be tested on wb classic sp5 and wbce 1.1.3
-- sanitize filter function input -> done
-- If function name and name differ , the Comment is added outside of the PHP tag. -> done
-- This can generate unwanted output after the problem was fixed , 
-  as the comment stays in the filter even when the problem is fixed -> done
-- aufjeden Fall kann man dort eingetragene Unterstriche nicht sehen 
-  -> (maybe a style issue in latest wbce?) to check in wbce 1.1.3
-
-- Der modul Typ ist am Anfang komplett deselektiert man muss erst einen anderen typen 
-  selektieren, wieder zurück selektieren, und kann dann Einstellungen vornehmen. 
-  -> fixed by jQuery, to check in wbce 1.1.3
-- Auch nach dem Abspeichern ist wieder alles deselektiert. -> dito
-- require_once(WB_PATH.'/include/pclzip/pclzip.lib.php');
-  functions.php Zeile 394 export.php Zeile 59 upload.php Zeile 76 -> done
-
-- Was man noch machen Könnte , ist die Original standard Filter mitliefern . 
-  Wobei das bei WBCE jetzt keine Priorität hat da man die ja nach belieben aus und 
-  anschalten kann jetzt, obwohl irgendwie sauberer wär das schon. 
-  (Vielleicht mach ich ein Packet mit allen Original WBCE Filtern)
-
-for later releases
-==================
+TODO list for future releases
+=============================
+- include standard filters and install them during module installation
 - update jquery plugins
-- further cleanup and restructuring of the code -> to be continued
+- support snippets used as filter function 
 - jQuery Compatibility handling
 - support drag&drop of filters
+- further cleanup and restructuring of the code 
+
