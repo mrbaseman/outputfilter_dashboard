@@ -5,7 +5,7 @@ Header: Version-History
 	*this version is a major re-engineering of the module with the goal to use it without PMF.*
 	Special thanks to all who have tested and especially to NorHei for fruitful discussions and for providing additional testing ressources.
 
-1.4.5 %(mrbaseman, 05 Feb 2016)%
+1.4.5 %(mrbaseman, 09 Feb 2016)%
 	- update documentation layout
 	- include example plugins again
 	- update patch check
