@@ -46,3 +46,8 @@ You may replace the images by new ones, taken from your
 (DK) backend.
 The standard images are reduced to 75%, and saved as
 8bit PNG images (optimal palette, 256 colors, no dither).
+
+
+Build process for the documentation:
+------------------------------------
+call the build script in naturaldocs_txt

@@ -8,9 +8,9 @@ install.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -84,3 +84,24 @@ opf_db_run_query("CREATE TABLE `".TABLE_PREFIX."mod_outputfilter_dashboard` (
         INDEX (`type`)
 ) ENGINE = MYISAM");
 
+opf_io_rmdir(dirname(__FILE__).'/naturaldocs_txt');
+
+
+// install example plugins
+
+$install_file = '/plugin_install.php';
+$info_file = 'plugin_info.php';
+$install_dir = dirname(__FILE__).'/plugins/';
+
+$plugins = array ( 
+        'cachecontrol',
+        'correct_date_format'
+);
+
+
+foreach($plugins as $plugin_dir){
+        // run install-script
+        if(file_exists($install_dir.$plugin_dir.$install_file)) {
+                require($install_dir.$plugin_dir.$install_file);
+        }
+}

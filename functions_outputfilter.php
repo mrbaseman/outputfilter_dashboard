@@ -8,9 +8,9 @@ functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -35,6 +35,10 @@ functions_outputfilter.php
  * along with OutputFilter-Dashboard. If not, see <http://www.gnu.org/licenses/>.
  * 
  **/
+
+/*
+        File: Filter functions
+*/
 
 // prevent this file from being accessed directly
 if(!defined('WB_PATH')) die(header('Location: ../index.php'));
@@ -537,7 +541,11 @@ function opf_register_filter($filter, $serialized=FALSE) {
                 } else
                         return(FALSE);
         }
-        if(($file=='' && $func=='') || (($file!='' && $func!=''))) {
+
+        $fileCheck = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $file);
+        $fileCheck = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$filter['plugin'], $fileCheck);
+        
+        if(($fileCheck=='' && $func=='') || (($fileCheck!='' && $func!=''))) {
                 trigger_error('File OR Function needed', E_USER_WARNING);
                 if($force) { // store it nevertheless, but set it inactive
                         $active = 0;
@@ -545,10 +553,12 @@ function opf_register_filter($filter, $serialized=FALSE) {
                 } else
                         return(FALSE);
         }
-        if($file && (!file_exists($file) || !is_file($file) || !is_readable($file))) {
+
+        if($fileCheck && (!file_exists($fileCheck) || !is_file($fileCheck) || !is_readable($fileCheck))) {
                 trigger_error("Can\'t read file ($file)", E_USER_WARNING);
                 return(FALSE);
         }
+
         if($func!='' && !preg_match("~$funcname\s*\(~", $func)) {
                 trigger_error('wrong funcname', E_USER_WARNING);
                 if($force) { // store it nevertheless, but set it inactive

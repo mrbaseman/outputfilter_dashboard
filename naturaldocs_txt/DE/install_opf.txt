@@ -30,9 +30,9 @@ Topic: Installation
         (see install_module_de.png)
 
 Topic: Nach der Installation
-        Website Baker Community Edition enth&auml;lt ab WBCE 1.1. bereits alle notwendigen Anpassungen.
+        *Website Baker ab Version 2.8.3 sp6 und Website Baker Community Edition ab WBCE 1.1 entalten bereits alle notwendigen Anpassungen. Im klassischen Website Baker muss das Outputfilter Dashboard explizit in den Einstellungen vom Frontend Output Filter aktiviert werden.*
 
-        F&uuml;r &auml;ltere Versionen und den klassischen Website Baker m&uuml;ssen noch zwei "Core"-Dateien angepa&szlig;t werden.
+        F&uuml;r &auml;ltere Versionen m&uuml;ssen noch zwei "Core"-Dateien angepa&szlig;t werden.
 
         Der n&auml;chste Abschnitt erkl&auml;rt die notwendigen Schritte.
 
@@ -42,8 +42,7 @@ Group: Core-Dateien ver&auml;ndern
 
 Topic: wb/index.php
 
-        &Ouml;ffnen Sie die Datei !wb/index.php! mit Ihrem Texteditor, und suchen Sie die nachstehenden
-        Zeilen (nah am Ende der Datei)
+        &Ouml;ffnen Sie die Datei !wb/index.php! mit Ihrem Texteditor, und suchen Sie die nachstehenden Zeilen (nah am Ende der Datei):
 
                 >// Collect general website settings
                 >$wb->get_website_settings();
@@ -91,28 +90,10 @@ Topic: wb/index.php
                 >       if(file_exists(WB_PATH .'/modules/output_filter/index.php')) {
                 >               include_once(WB_PATH .'/modules/output_filter/index.php');
                 
-        Wenn Sie innerhalb von Output Filter Dashboard Wrapper verwenden, um die 
-        klassischen Output Filter einzubinden, k&ouml;nnen Sie die folgende Variante verwenden,
-        die die klassischen Output Filter anschlie&szlig;end nicht ein zweites Mal einbinden.
-         
-                >require(WB_PATH.'/templates/'.TEMPLATE.'/index.php');
-                >$output = ob_get_contents();
-                >if(ob_get_length() > 0) { ob_end_clean(); }
-                >
-                >// apply outputfilter
-                >if(function_exists('opf_apply_filters')) {
-                >   $output = opf_controller('page', $output);
-                >} else /* <- this "else" causes the classical output filters to be skipped */
-                >
-                >// execute frontend output filters
-                >       if(file_exists(WB_PATH .'/modules/output_filter/index.php')) {
-                >               include_once(WB_PATH .'/modules/output_filter/index.php');
-
 
 Topic: wb/framework/frontend.functions.php
 
-        &Ouml;ffen Sie nun die Datei !wb/framework/frontend.functions.php!,
-        und suchen Sie die nachstehenden Zeilen (ungef&auml;hr bei Zeile 312)
+        &Ouml;ffen Sie nun die Datei !wb/framework/frontend.functions.php!, und suchen Sie die nachstehenden Zeilen (ungef&auml;hr bei Zeile 312):
         
                 >     ob_start(); // fetch original content
                 >     require(WB_PATH.'/modules/'.$module.'/view.php');
@@ -133,13 +114,13 @@ Topic: wb/framework/frontend.functions.php
                 >     continue;
                 > }
 
-        Dann suchen Sie diese Zeilen (ungef&auml;hr bei Zeile 328)
+        Dann suchen Sie diese Zeilen (ungef&auml;hr bei Zeile 328):
 
                 >  else {
                 >      require(PAGE_CONTENT);
                 >  }
 
-        und *ersetzen* Sie dies durch den folgenden Code-Block
+        und *ersetzen* Sie dies durch den folgenden Code-Block:
 
                 >  else {  // Searchresults! But also some special pages, 
                 >           // e.g. guestbook (add entry), news (add comment) uses this

@@ -6,9 +6,9 @@ templates/tool.htt
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -73,7 +73,6 @@ templates/tool.htt
                 <td align="left">
                         <form action="{tpl_add_onclick}" method="POST">
                         <input type="hidden" name="save_settings" value="save_settings">
-                        {FTAN}
                         <button type="submit" title="{TXT_ADD_FILTER}"><img src="{IMAGE_URL}/add_inline_opf.png" alt="" /><img src="{IMAGE_URL}/inline.png" border="0" alt="" /> {TXT_NEW_INLINEFILTER}</button>
                         <button type="button" id="show-upload" class="show-upload" title="{TXT_UPLOAD_FILTER}"><img src="{IMAGE_URL}/add_inline_opf.png" alt="" /><img src="{IMAGE_URL}/plugin.png" border="0" alt="" /> {TXT_UPLOAD_PLUGIN_FILTER}</button>
                         </form>
@@ -95,7 +94,7 @@ templates/tool.htt
 <div id="upload-panel" {tpl_hide_upload}>
         <form enctype="multipart/form-data" action="{tpl_upload_url}" method="POST">
         <input type="hidden" name="save_settings" value="save_settings">
-        {FTAN}
+                <!--/* {FTAN} is currently included in submitlink */-->  
                 <b>{TXT_UPLOAD_FILTER_PLUGIN}:</b>
                 <input name="filterplugin" type="file" size="60" />
                 <button type="submit" title="{TXT_INSTALL_PLUGIN_FILTER}"><img src="{IMAGE_URL}/upload_16.png" alt="" />{TXT_UPLOAD}</button>
@@ -107,7 +106,7 @@ templates/tool.htt
 <!--/*  List of filters  */-->
 <form name="outputfilter" id="outputfilter" method="post">
 <input type="hidden" name="save_settings" value="save_settings">
-{FTAN}
+<!--/* {FTAN} is currently included in submitlink */-->  
 <table id="dashboard" class="filters-table" cellpadding="3px" cellspacing="0" border="0" width="100%">
         <thead>
                 <tr>

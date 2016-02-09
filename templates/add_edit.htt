@@ -6,9 +6,9 @@ templates/add_edit.htt
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -180,38 +180,49 @@ var opf_use_checktrees = true;
 
 
 <!-- BEGIN text_block -->
+        <tr>
         <th>{tpl_field_text}:</th>
         <td><input type="text" name="{tpl_field_name}" value="{tpl_field_value}" size="40" {tpl_field_style} /></td>
+        </tr>
 <!-- END text_block -->
 
 
 
 <!-- BEGIN textarea_block -->
+        <tr>
         <th>{tpl_field_text}:</th>
         <td><textarea id="{tpl_field_id}" name="{tpl_field_name}" cols="40" rows="5" {tpl_field_style}>{tpl_field_value}</textarea></td>
+        </tr>
 <!-- END textarea_block -->
 
 
 <!-- BEGIN checkbox_block -->
+        <tr>
         <th>{tpl_field_text}:</th>
         <td><input type="checkbox" value="{tpl_field_value}" name="{tpl_field_name}" {tpl_field_checked} /></td>
+        </tr>
 <!-- END checkbox_block -->
 
 
 <!-- BEGIN radio_block -->
+        <tr>
         <th>{tpl_field_text}:</th>
         <td><input type="radio" value="{tpl_field_value}" name="{tpl_field_name}" {tpl_field_checked} /></td>
+        </tr>
 <!-- END radio_block -->
 
 
 <!-- BEGIN select_block -->
+        <tr>
         <th>{tpl_field_text}:</th>
         <td><select name="{tpl_field_name}" size="1">{tpl_field_options}</select></td>
+        </tr>
 <!-- END select_block -->
 
 
 
 <!-- BEGIN array_row_block -->
+        <tr>
         <td colspan="2">
         <table class="textfields" width="100%" cellpadding="2" cellspacing="0" border="0">
         <tr>
@@ -221,17 +232,9 @@ var opf_use_checktrees = true;
                 <td style="width:60%;"><textarea id="{tpl_valid}" name="{tpl_field_name}[v][]" style="width:95%;" rows="1" />{tpl_value}</textarea></td>
         </tr>
         </table>                               
-        </td>                                 
+        </td>
+        </tr>                                 
 <!-- END array_row_block -->
-
-
-<!--/* we loop over this for each field and insert the specific content depending on the field type */-->
-
-<!-- BEGIN single_field_block -->
-        <tr>
-                {TPL_FIELD_BLOCK}
-        </tr>
-<!-- END single_field_block -->
 
 
 <!-- BEGIN func_area_block -->

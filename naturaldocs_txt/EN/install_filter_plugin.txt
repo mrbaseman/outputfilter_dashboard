@@ -56,6 +56,3 @@ plugin_uninstall.php:
         >
 
 
-Topic: Use Practical Module Functions
-
-To use functions from pmf you have to 

@@ -8,9 +8,9 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -55,35 +55,39 @@ if(!$admin->get_permission('admintools')) die(header('Location: ../../index.php'
 // load outputfilter-functions
 require_once(dirname(__FILE__)."/functions.php");
 
-// check the fTAN - $doSave is set by admin/admintools/tool.php
-if($doSave){
-    global $MESSAGE;
-    if ( method_exists( $admin, 'checkFTAN' ) ) { 
-        if (!$admin->checkFTAN('GET')) {
-            if (ob_get_contents()==""&&!headers_sent()){
-               if(!defined('NEW_WBCE_VERSION')){
-                  $admin->print_header();
-               }
-            }
-            $admin->print_error($MESSAGE['GENERIC_SECURITY_ACCESS'],
-            $ToolUrl);
-            $admin->print_footer();
-            exit();
-        }
-    } 
-}
-$need_footer=FALSE;
-if (ob_get_contents()==""&&!headers_sent()){
-        if(!defined('NEW_WBCE_VERSION')){
-            $admin->print_header();
-            $need_footer=TRUE;
-        }
-}
 
 $ModDir  = basename(dirname(__FILE__));
 $ModPath = dirname(__FILE__);
 $ModUrl  = WB_URL."/modules/$ModDir";
 $ToolUrl = ADMIN_URL."/admintools/tool.php?tool=$ModDir";
+
+// check the fTAN - $doSave is set by admin/admintools/tool.php
+if($doSave){
+    global $MESSAGE;
+    if ( method_exists( $admin, 'checkFTAN' ) ) { 
+        if ( (!$admin->checkFTAN('GET')) 
+                /*
+                // Workaround for sp5 / sp6(?): 
+                // disable fTAN as a mitigation for a bug in the SecureToken class 
+                   && (!isset($_SESSION['TOKENS']))
+                */
+           ) {
+              if ((ob_get_contents()=="") && (!headers_sent())){
+                  $admin->print_header();
+              }
+              $admin->print_error($MESSAGE['GENERIC_SECURITY_ACCESS'],
+              $ToolUrl);
+              $admin->print_footer();
+              exit();
+           }
+    } 
+}
+$need_footer=FALSE;
+// depending on the WB version/fork the admin header is already printed/cached or not...
+if ((ob_get_contents()=="") && (!headers_sent())){
+        $admin->print_header();
+        $need_footer=TRUE;
+}
 
 $now = time();
 
@@ -218,11 +222,15 @@ if($add && $doSave ){ //================================================ add ===
                 }
                 $filter['edit_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;edit=1&amp;$token";
                 if($filter['csspath']!='') {
+                        $filter['csspath']         = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $filter['csspath']);
+                        $filter['csspath']         = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$filter['plugin'], $filter['csspath']);
                         $filter['css_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;csspath=".urlencode($filter['csspath'])."&amp;$token";
                 } else {
                         $filter['css_link'] = '';
                 }
                 if($filter['helppath']) {
+                        $filter['helppath'] = str_replace('{SYSVAR:WB_URL}', WB_URL, $filter['helppath']);
+                        $filter['helppath'] = str_replace('{OPF:PLUGIN_URL}', OPF_PLUGINS_URL.$filter['plugin'], $filter['helppath']);
                         $filter['helppath_onclick'] = "javascript: return opf_popup('{$filter['helppath']}');";
                 } else {
                         $filter['helppath_onclick'] = '';
@@ -284,7 +292,6 @@ if($add && $doSave ){ //================================================ add ===
                 'tpl_patch_applied' => $patch_applied,
                 'tpl_patch_corefiles' => sprintf($LANG['MOD_OPF']['TXT_PATCH_COREFILES'], WB_URL.$docu_patch_url),
                 'tpl_docu_patch_url' => WB_URL.$docu_patch_url,
-                'FTAN' => $admin->getFTAN(),
                 'WB_URL' => WB_URL,
                 'MOD_URL' => WB_URL.'/modules/'.$module_directory,
                 'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images'
@@ -296,8 +303,6 @@ if($add && $doSave ){ //================================================ add ===
                 // Setup template object
                 $tpl->set_block('page', 'export_block', 'export');
                 $tpl->parse('TPL_EXPORT_BLOCK', 'export_block', false);
-                // this is how we could get the result back without substituting it into main_block
-                // echo $tpl->get_var('TPL_EXPORT_BLOCK');
         } else { 
                 // store empty string otherwise
                 $tpl->set_var('TPL_EXPORT_BLOCK', "");
@@ -402,9 +407,17 @@ if($add && $doSave ){ //================================================ add ===
         print opf_filter_Comments($tpl->parse('output', 'main', false));
 }
 
-if($need_footer) {
- $admin->print_footer();
- exit;
-}
+/* Workaround for broken FTANs in sp5 onwards:
+   - explicitly print out footer, 
+   - then destroy admin class to store ftans to session 
+   - wait for 0.1 seconds
+   - then explicitly exit (this is another command after the destructor of admin, 
+     which then stores the tokens to the session).
+*/
+
+$admin->print_footer();
+unset($admin);
+usleep(100000);
+exit(0);
 
 

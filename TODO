@@ -1,10 +1,7 @@
-
 TODO list for future releases
 =============================
-- include standard filters and install them during module installation
 - update jquery plugins
-- support snippets used as filter function 
-- jQuery Compatibility handling
 - support drag&drop of filters
-- further cleanup and restructuring of the code 
-
+- improve readability of exported filters
+- include more example filters
+- support backend filters

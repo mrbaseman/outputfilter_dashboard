@@ -8,9 +8,9 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.1
+ * @version         1.4.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            http://forum.wbce.org/viewtopic.php?pid=3121
@@ -43,6 +43,11 @@ if(!defined('WB_PATH')) die(header('Location: ../index.php'));
 // obtain module directory
 $mod_dir = basename(dirname(__FILE__));
 require(WB_PATH.'/modules/'.$mod_dir.'/info.php');
+
+if(!defined('OPF_PLUGINS_PATH')) 
+    define('OPF_PLUGINS_PATH', dirname(__FILE__).'/plugins/');
+if(!defined('OPF_PLUGINS_URL')) 
+    define('OPF_PLUGINS_URL', WB_URL.'/modules/'.$mod_dir.'/plugins/');
 
 // include module.functions.php 
 include_once(WB_PATH . '/framework/module.functions.php');
@@ -275,11 +280,6 @@ function opf_fetch_clean($val, $default=NULL, $type='int', $args=FALSE, $from_gp
     }
     if(function_exists('__opf_fetch_clean_'.$t))
       $filter = '__opf_fetch_clean_'.$t;
-    /* do we really need this?
-     *
-     * elseif(function_exists('opf_check_userfilter_'.$t))
-     *   $filter = 'opf_check_userfilter_'.$t;
-     */
     else {
       die(sprintf($LANG['MOD_OPF']['TXT_ERR_SECURITY_BREACH'],'opf_fetch_clean'));
     }
@@ -484,14 +484,26 @@ function opf_upload_move($id, $path, $name='') {
 // check wether the core contains the patches
 
 function opf_check_patched(){
+    // WBCE calls opf_controller directly, wb 2.8.3 sp6 uses the OutputFilterApi 
     $patch_applied=FALSE;
     if($content = file_get_contents(WB_PATH.'/framework/frontend.functions.php')) {
-        if(preg_match('/opf_controller[^;]*section/', $content)) {
-            if(preg_match('/opf_controller[^;]*special/', $content)) {
+        if(preg_match('/opf_controller[^;]*section/', $content) ||
+           // detect a bug in a release candidate for sp6:
+           preg_match('/OpF\?arg=section\&module/', $content)) {
+            if(preg_match('/(opf_controller|OpF)[^;]*special/', $content)) {
                 if($content = file_get_contents(WB_PATH.'/index.php')) {
+                    // wbce or patch manually applied
                     if(preg_match('/opf_controller[^;]*page/', $content)) {
                         $patch_applied = TRUE;
                     }
+                     if($content = file_get_contents(WB_PATH.'/modules/output_filter/index.php')) {
+                             // sp4 and sp5 started to use OutputFilterApi 
+                        // but it was broken at that time
+                         if(preg_match('/OpF/', $content)) {
+                             $patch_applied = TRUE;
+                         }
+                     }                    
+                    
                 }
             }
         } 
@@ -955,7 +967,10 @@ function opf_apply_filters(&$content, $type, $module, $page_id, $section_id, $wb
                                 && ((in_array('all', $filter['pages']) || in_array($page_id, $filter['pages']))
                                  || (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent']))
                                 )) {
+                            
                                 if(!function_exists($filter['funcname'])) {
+                                        $filter['file'] = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $filter['file']);
+                                        $filter['file'] = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$filter['plugin'], $filter['file']);
                                         if($filter['file'] && file_exists($filter['file'])) {
                                                 require_once($filter['file']);
                                         } else {
@@ -1370,7 +1385,7 @@ function opf_save() {
 }
 
 
-function opf_controller($arg, $opt, $module='', $page_id=0, $section_id=0) {
+function opf_controller($arg, $opt=null, $module='', $page_id=0, $section_id=0) {
         global $wb;
         
         switch($arg) {
@@ -1378,8 +1393,9 @@ function opf_controller($arg, $opt, $module='', $page_id=0, $section_id=0) {
                 opf_preload_filter_definitions();
                 break;
         case('page'):
-                opf_apply_filters($opt, OPF_TYPE_PAGE, FALSE, PAGE_ID, FALSE, $wb);
-                opf_apply_filters($opt, OPF_TYPE_PAGE_LAST, FALSE, PAGE_ID, FALSE, $wb);
+                if(defined('PAGE_ID')&&($page_id==0))$page_id=PAGE_ID;
+                opf_apply_filters($opt, OPF_TYPE_PAGE, FALSE, $page_id, FALSE, $wb);
+                opf_apply_filters($opt, OPF_TYPE_PAGE_LAST, FALSE, $page_id, FALSE, $wb);
                 opf_insert_frontend_files($opt);
                 return($opt);
                 break;
@@ -1389,14 +1405,15 @@ function opf_controller($arg, $opt, $module='', $page_id=0, $section_id=0) {
                 return($opt);
                 break;
         case('special'):
-                foreach(opf_apply_get_modules(PAGE_ID) as $module) {
-                        opf_apply_filters($opt, OPF_TYPE_SECTION, $module['module'], PAGE_ID, $module['section_id'], $wb);
-                        opf_apply_filters($opt, OPF_TYPE_SECTION_LAST, $module['module'], PAGE_ID, $module['section_id'], $wb);
+                if(defined('PAGE_ID')&&($page_id==0))$page_id=PAGE_ID;
+                foreach(opf_apply_get_modules($page_id) as $module) {
+                        opf_apply_filters($opt, OPF_TYPE_SECTION, $module['module'], $page_id, $module['section_id'], $wb);
+                        opf_apply_filters($opt, OPF_TYPE_SECTION_LAST, $module['module'], $page_id, $module['section_id'], $wb);
                 }
                 return($opt);
                 break;
-        default;
-                ;
+        default:
+                return($opt);
         }
 }
 

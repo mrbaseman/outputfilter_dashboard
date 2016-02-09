@@ -652,7 +652,7 @@ h3.CTitle  { color: #3c4557; font-size: 12pt; border-style: solid; border-width:
     margin-right: 10px;
     }
     
-.mypriv_var   { font: 10pt "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, monospace; }
+.mypriv_var   { font: 10pt "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, monospace; font-weight: bold; }
 .mypriv_vartype {  font: italic 10pt "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, monospace;  color: #808080;}
 
 @media print {
