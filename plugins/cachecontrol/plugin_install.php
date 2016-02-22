@@ -26,7 +26,7 @@ if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
 
 opf_register_filter(array(
         'name' => 'Cache Control',
-        'type' => OPF_TYPE_PAGE,
+        'type' => OPF_TYPE_PAGE_LAST,
         'file' =>  '{OPF:PLUGIN_PATH}/filter.php',
         'funcname' => 'opff_cachecontrol',
         'desc' => array(

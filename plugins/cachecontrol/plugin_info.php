@@ -27,6 +27,9 @@ if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
 /*
 Header: Version-History
 
+1.0.4 %(mrbaseman; 21 Feb, 2016)%
+        - change filter type to page (last)
+
 1.0.3 %(mrbaseman; 21 Feb, 2016)%
         - use sysvar-place holders
 
@@ -42,7 +45,7 @@ Header: Version-History
 
 $plugin_directory   = 'cachecontrol';
 $plugin_name        = 'Cache Control';
-$plugin_version     = '1.0.3';
+$plugin_version     = '1.0.4';
 $plugin_status      = 'beta';
 $plugin_platform    = '2.8';
 $plugin_author      = 'thorn, mrbaseman';
