@@ -5,6 +5,23 @@ Header: Version-History
 	*this version is a major re-engineering of the module with the goal to use it without PMF.*
 	Special thanks to all who have tested and especially to NorHei for fruitful discussions and for providing additional testing ressources.
 
+1.4.8 %(mrbaseman, 21 Feb 2016)%
+	- remove unused code part from add_filter to fix array conversion warnings
+	- update plugin filters to use new placeholders introduced in 1.4.4
+	> in order to pick up this change you have to remove the example filters before upgrading OpF
+	- update documentation: added a section which explains the use of the constants and placeholders 
+
+1.4.7 %(mrbaseman, 21 Feb 2016)%
+	- a couple of cosmetic bugfixes (correctly display Umlauts in filter list, replace German ss special char with ss in filter description, remove unused filter_id from template parsing, properly initialize TPL_EXTRA_FIELDS_BLOCK in edit_filter, fix for using global LANG inside method in WBCE)
+	- security fix: check ftan for upload
+	- several fixes for arrays as additional field (like in correct date example)
+	- fix css edit for filters that provide css
+
+1.4.6 %(mrbaseman, 18 Feb 2016)%
+        - add module icon for WBCE 1.2
+	- bugfix: do not allow moving up uppermost filter
+	- switch from FTANs to IDKEYs in many places of the backend 
+
 1.4.5 %(mrbaseman, 09 Feb 2016)%
 	- update documentation layout
 	- include example plugins again

@@ -6,7 +6,7 @@ templates/tool.htt
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -73,6 +73,7 @@ templates/tool.htt
                 <td align="left">
                         <form action="{tpl_add_onclick}" method="POST">
                         <input type="hidden" name="save_settings" value="save_settings">
+                        {FTAN}
                         <button type="submit" title="{TXT_ADD_FILTER}"><img src="{IMAGE_URL}/add_inline_opf.png" alt="" /><img src="{IMAGE_URL}/inline.png" border="0" alt="" /> {TXT_NEW_INLINEFILTER}</button>
                         <button type="button" id="show-upload" class="show-upload" title="{TXT_UPLOAD_FILTER}"><img src="{IMAGE_URL}/add_inline_opf.png" alt="" /><img src="{IMAGE_URL}/plugin.png" border="0" alt="" /> {TXT_UPLOAD_PLUGIN_FILTER}</button>
                         </form>
@@ -94,7 +95,7 @@ templates/tool.htt
 <div id="upload-panel" {tpl_hide_upload}>
         <form enctype="multipart/form-data" action="{tpl_upload_url}" method="POST">
         <input type="hidden" name="save_settings" value="save_settings">
-                <!--/* {FTAN} is currently included in submitlink */-->  
+                {FTAN}
                 <b>{TXT_UPLOAD_FILTER_PLUGIN}:</b>
                 <input name="filterplugin" type="file" size="60" />
                 <button type="submit" title="{TXT_INSTALL_PLUGIN_FILTER}"><img src="{IMAGE_URL}/upload_16.png" alt="" />{TXT_UPLOAD}</button>
@@ -106,7 +107,7 @@ templates/tool.htt
 <!--/*  List of filters  */-->
 <form name="outputfilter" id="outputfilter" method="post">
 <input type="hidden" name="save_settings" value="save_settings">
-<!--/* {FTAN} is currently included in submitlink */-->  
+{FTAN}
 <table id="dashboard" class="filters-table" cellpadding="3px" cellspacing="0" border="0" width="100%">
         <thead>
                 <tr>
@@ -134,7 +135,7 @@ templates/tool.htt
         <p>
 Copyright &copy; 2009-2010, Thomas 'thorn' Hornik <a title="thorn@nettest.thekk.de" href="mailto:thorn@nettest.thekk.de">thorn@nettest.thekk.de</a><br />
 Copyright &copy; 2010-2015, Christian M. Stefan (Stefek) <a title="stefek@designthings.de" href="mailto:stefek@designthings.de">stefek@designthings.de</a><br />
-Copyright &copy; 2016, Martin Hecht (mrbaseman) <a title="mrbaseman@gmx.de" href="mrbaseman@gmx.de">mrbaseman@gmx.de</a><br />
+Copyright &copy; 2016, Martin Hecht (mrbaseman) <a title="mrbaseman@gmx.de" href="mailto:mrbaseman@gmx.de">mrbaseman@gmx.de</a><br />
 <a href="https://github.com/WebsiteBaker-modules/outpufilter_dashboard" target="_blank" title="{TXT_VISIT_PROJECTS_WEBSITE}">
                 <img src="{IMAGE_URL}/a_blank.png" alt="" />Project Website</a></p>        
         <p><a href="{tpl_tool_url}" onclick="{tpl_help_onclick}" title="{TXT_HELP_BROWSER}">
@@ -190,12 +191,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
 <!-- BEGIN filter_block -->
 <tr class="{tpl_filter_class} {tpl_filter_active}">
         <td {tpl_filter_separator}>
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_activelink}';
-                document.getElementById('outputfilter').submit();"><img src="{IMAGE_URL}/{tpl_filter_active_inactive}.png" alt="[{tpl_filter_on_off}]" title="{tpl_filter_activelink_title}" border="0" /></a>
+                <a href="{tpl_filter_activelink}"><img src="{IMAGE_URL}/{tpl_filter_active_inactive}.png" alt="[{tpl_filter_on_off}]" title="{tpl_filter_activelink_title}" border="0" /></a>
         </td>
         <td {tpl_filter_separator}>
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_editlink}';
-                document.getElementById('outputfilter').submit();" title="{TXT_EDIT_FILTER}"><nobr><img src="{IMAGE_URL}/opf.png" alt="" border="0" /> {tpl_filter_name}</nobr></a>
+                <a href="{tpl_filter_editlink}" title="{TXT_EDIT_FILTER}"><nobr><img src="{IMAGE_URL}/opf.png" alt="" border="0" /> {tpl_filter_name}</nobr></a>
         </td>
         <td {tpl_filter_separator}><small>
                     <img class="info" src="{IMAGE_URL}/{tpl_filter_type}.png" title="{tpl_filter_title}" border="0" alt="{tpl_filter_type}"/></small></td>
@@ -216,21 +215,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
         </td>
         <td {tpl_filter_separator}>
                 {tpl_filter_css_link_start}
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_css_link}';
-                document.getElementById('outputfilter').submit();" title="{TXT_EDITCSS}"><img src="{IMAGE_URL}/css_script.gif" alt="[css]" border="0" /></a>
+                <a href="{tpl_filter_css_link}" title="{TXT_EDITCSS}"><img src="{IMAGE_URL}/css_script.gif" alt="[css]" border="0" /></a>
                 {tpl_filter_css_link_end}
         </td>                
         <td {tpl_filter_separator}>
                 {tpl_filter_moveup_link_start}
                 
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_moveup_link}';
-                document.getElementById('outputfilter').submit();" title="{TXT_MOVE_UP}"><img src="{IMAGE_URL}/up_16.png" border="0" alt="/\" /></a>
+                <a href="{tpl_filter_moveup_link}" title="{TXT_MOVE_UP}"><img src="{IMAGE_URL}/up_16.png" border="0" alt="/\" /></a>
                 {tpl_filter_moveup_link_end}
         </td>
         <td {tpl_filter_separator}>
                 {tpl_filter_movedown_link_start}
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_movedown_link}';
-                document.getElementById('outputfilter').submit();" title="{TXT_MOVE_DOWN}"><img src="{IMAGE_URL}/down_16.png" border="0" alt="\/" /></a>
+                <a href="{tpl_filter_movedown_link}" title="{TXT_MOVE_DOWN}"><img src="{IMAGE_URL}/down_16.png" border="0" alt="\/" /></a>
                 {tpl_filter_movedown_link_end}
         </td>
         <td {tpl_filter_separator}>
@@ -241,8 +237,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
         </td>
         <td {tpl_filter_separator}>
                 {tpl_filter_export_link_start}
-                <a href="#" onclick="document.getElementById('outputfilter').action='{tpl_filter_export_link}';
-                document.getElementById('outputfilter').submit();"  title="{TXT_EXPORT_FILTER}">
+                <a href="{tpl_filter_export_link}"  title="{TXT_EXPORT_FILTER}">
                 <img src="{IMAGE_URL}/export_16.png" border="0" alt="=>>" /></a>
                 {tpl_filter_export_link_end}
         </td>

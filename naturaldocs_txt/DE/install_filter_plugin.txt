@@ -5,6 +5,19 @@ Topic: Einen Plugin-Filter erzeugen
 Plugin-Filter sind, &auml;hnlich wie Module, ZIP-Archive aus den Dateien !plugin_info.php!,
 !plugin_install.php!, !filter.php! und m&ouml;glicherweise !plugin_uninstall.php!.
 
+Die folgenden Platzhalter k&ouml;nnen anstelle von hart codierten Pfaden innerhalb von OpF-Plugins verwendet werden
+        >        {SYSVAR:WB_URL}   = wird durch den Inhalt der Konstanten WB_URL ersetzt
+        >        {SYSVAR:WB_PATH}  = wird durch den Inhalt der Konstanten WB_PATH ersetzt
+        >        {OPF:PLUGIN_URL}  = wird durch  WB_URL.'/modules/outputfilter_dashboard/plugins/{plugin_name}' ersetzt
+        >        {OPF:PLUGIN_PATH} = wird durch WB_PATH.'/modules/outputfilter_dashboard/plugins/{plugin_name}' ersetzt
+                        
+Innerhalb der Filter funktionen funktionieren die folgenden KONSTANTEN f&uuml;r OPF Plugins 
+        >        OPF_PLUGINS_PATH  
+        >        OPF_PLUGINS_URL
+                        Der Pfad und die Url zum Plugins-Ordner ist sehr lang und wird h&auml;ufig innerhalb von FIltern ben&ouml;tigt,
+                        daher sind diese Konstanten eine bequeme Erg&auml;nzung.
+                        Die URL ist 
+        > OPF_PLUGINS_URL = [ WB_URL.'/modules/'.basename(dirname(__FILE__)).'/plugins/' ] 
 
 plugin_info.php:
         ><?php
@@ -24,7 +37,7 @@ plugin_install.php:
         >        'plugin' => 'cachecontrol',
         >        'name' => 'Cache Control',
         >        'type' => OPF_TYPE_PAGE_LAST,
-        >        'file' => WB_PATH.'/modules/outputfilter_dashboard/plugins/cachecontrol/filter.php',
+        >        'file' => '{OPF:PLUGIN_PATH}/filter.php',
         >        'funcname' => 'opff_cachecontrol',
         >        'desc' => array('EN' => "Description ... Take care that this filter is called last!",
         >                        'DE' => "Beschreibung ... Achten Sie darauf, da&szlig; dieser Filter als letzter aufgerufen wird!"

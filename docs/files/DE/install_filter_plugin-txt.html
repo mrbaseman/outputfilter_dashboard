@@ -13,7 +13,11 @@ if (browserType) {document.write("<div class=" + browserType + ">");if (browserV
 
 <div id=Content><div class="CFile"><div class=CTopic id=MainTopic><h1 class=CTitle><a name="Plugin-Filter_schreiben(de)"></a>Plugin-Filter schreiben (de)</h1><div class=CBody><!--START_ND_SUMMARY--><div class=Summary><div class=STitle>Summary</div><div class=SBorder><table border=0 cellspacing=0 cellpadding=0 class=STable><tr class="SMain"><td class=SEntry><a href="#Plugin-Filter_schreiben(de)" >Plugin-Filter schreiben (de)</a></td><td class=SDescription></td></tr><tr class="SGeneric SMarked"><td class=SEntry><a href="#Einen_Plugin-Filter_erzeugen" >Einen Plugin-Filter erzeugen</a></td><td class=SDescription>Plugin-Filter sind, &auml;hnlich wie Module, ZIP-Archive aus den Dateien <span class="mypriv_var">plugin_info.php</span>, <span class="mypriv_var">plugin_install.php</span>, <span class="mypriv_var">filter.php</span>&nbsp; </td></tr></table></div></div><!--END_ND_SUMMARY--></div></div></div>
 
-<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="Einen_Plugin-Filter_erzeugen"></a>Einen Plugin-Filter erzeugen</h3><div class=CBody><p>Plugin-Filter sind, &auml;hnlich wie Module, ZIP-Archive aus den Dateien <span class="mypriv_var">plugin_info.php</span>, <span class="mypriv_var">plugin_install.php</span>, <span class="mypriv_var">filter.php</span> und m&ouml;glicherweise <span class="mypriv_var">plugin_uninstall.php</span>.</p><h4 class=CHeading>plugin_info.php</h4><blockquote><pre class="prettyprint">&lt;?php
+<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="Einen_Plugin-Filter_erzeugen"></a>Einen Plugin-Filter erzeugen</h3><div class=CBody><p>Plugin-Filter sind, &auml;hnlich wie Module, ZIP-Archive aus den Dateien <span class="mypriv_var">plugin_info.php</span>, <span class="mypriv_var">plugin_install.php</span>, <span class="mypriv_var">filter.php</span> und m&ouml;glicherweise <span class="mypriv_var">plugin_uninstall.php</span>.</p><p>Die folgenden Platzhalter k&ouml;nnen anstelle von hart codierten Pfaden innerhalb von OpF-Plugins verwendet werden</p><blockquote><pre class="prettyprint">{SYSVAR:WB_URL}   = wird durch den Inhalt der Konstanten WB_URL ersetzt
+{SYSVAR:WB_PATH}  = wird durch den Inhalt der Konstanten WB_PATH ersetzt
+{OPF:PLUGIN_URL}  = wird durch  WB_URL.'/modules/outputfilter_dashboard/plugins/{plugin_name}' ersetzt
+{OPF:PLUGIN_PATH} = wird durch WB_PATH.'/modules/outputfilter_dashboard/plugins/{plugin_name}' ersetzt</pre></blockquote><p>Innerhalb der Filter funktionen funktionieren die folgenden KONSTANTEN f&uuml;r OPF Plugins</p><blockquote><pre class="prettyprint">OPF_PLUGINS_PATH
+OPF_PLUGINS_URL</pre></blockquote><p>Der Pfad und die Url zum Plugins-Ordner ist sehr lang und wird h&auml;ufig innerhalb von FIltern ben&ouml;tigt, daher sind diese Konstanten eine bequeme Erg&auml;nzung.&nbsp; Die URL ist</p><blockquote><pre class="prettyprint">OPF_PLUGINS_URL = [ WB_URL.'/modules/'.basename(dirname(__FILE__)).'/plugins/' ]</pre></blockquote><h4 class=CHeading>plugin_info.php</h4><blockquote><pre class="prettyprint">&lt;?php
 $plugin_directory   = 'cachecontrol';
 $plugin_name        = 'Cache Control';
 $plugin_version     = '1.0.0';
@@ -26,7 +30,7 @@ opf_register_filter(array(
         'plugin' =&gt; 'cachecontrol',
         'name' =&gt; 'Cache Control',
         'type' =&gt; OPF_TYPE_PAGE_LAST,
-        'file' =&gt; WB_PATH.'/modules/outputfilter_dashboard/plugins/cachecontrol/filter.php',
+        'file' =&gt; '{OPF:PLUGIN_PATH}/filter.php',
         'funcname' =&gt; 'opff_cachecontrol',
         'desc' =&gt; array('EN' =&gt; &quot;Description ... Take care that this filter is called last!&quot;,
                         'DE' =&gt; &quot;Beschreibung ... Achten Sie darauf, da&szlig; dieser Filter als letzter aufgerufen wird!&quot;

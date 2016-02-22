@@ -8,7 +8,7 @@ add_filter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -54,6 +54,9 @@ require_once(dirname(__FILE__).'/functions.php');
 
 // This file will be included from tool.php
 
+// prevent this file from being accessed directly
+if(!defined('WB_PATH')) die(header('Location: ../index.php'));
+
 // check if user is allowed to use admin-tools (to prevent this file to be called by an unauthorized user e.g. from a code-section)
 if(!$admin->get_permission('admintools')) die(header('Location: ../../index.php'));
 
@@ -88,15 +91,14 @@ foreach($types as $value=>$text){
 
 
 // fill target checkbox-trees
-$mlist = $plist1 = $plist2 = '';
+$mlist = $plist1 = '';
 $mlist = opf_make_modules_checktree($modules, $type='tree', TRUE);
 $plist1  = opf_make_pages_parent_checktree($pages_parent, $pages, $type='tree');
-//$plist2  = opf_make_pages_checktree($pages, $type='tree');
 
 // do we have to display additional_fields? - No
-$list_growfield = "";
-$list_editarea = "";
-$extra_fields = array();
+$list_growfield = ""; 
+$list_editarea =  "";
+$extra_fields = "";
 
 
 // init template
@@ -117,7 +119,8 @@ array_merge($LANG['MOD_OPF'],
         // checkbox-trees: contains the whole HTML-output. Just use echo
         'tpl_module_tree' => $mlist,
         'tpl_pages_list1' => $plist1,
-        'tpl_save_url' => opf_quotes(ADMIN_URL."/admintools/tool.php?tool=".basename(dirname(__FILE__)).'&amp;'.$admin->getFTAN(false)),
+        'tpl_save_url' => opf_quotes(ADMIN_URL."/admintools/tool.php?tool=".basename(dirname(__FILE__))),
+        'FTAN' => $ftan,
         'tpl_id' => opf_quotes($id),
         'tpl_filter_name' => opf_quotes($name),
         'tpl_filter_funcname' => opf_quotes($funcname),
@@ -134,8 +137,8 @@ array_merge($LANG['MOD_OPF'],
         'tpl_filter_type_options' => $filter_type_options,
         'WB_URL' => WB_URL,
         'MOD_URL' => WB_URL.'/modules/'.$module_directory,
-        'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images'
-
+        'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images',
+        'TPL_EXTRA_FIELDS_BLOCK' => ""
 )));
 
 
@@ -155,80 +158,7 @@ array_merge($LANG['MOD_OPF'],
                 $tpl->set_var('TPL_FUNC_AREA_BLOCK', "");
         }
 
-        // if extra_fileds is not empty parse the extra_fields_block and store the result in TPL_EXTRA_fields_AREA_BLOCK
-        if(!empty($extra_fields)){
-            $TPL_EXTRA_FIELDS_BLOCK="";
-            foreach($extra_fields as $field){
-                    $template=$field['type'];
-                if($field['type']=='editarea')$template='textarea';                
-                $tpl_field_text=opf_quotes($field['text']);
-                $tpl->set_var('tpl_field_text', $tpl_field_text);
-                $tpl_field_name=opf_quotes($field['name']);
-                $tpl->set_var('tpl_field_name', $tpl_field_name);
-                $tpl_field_value=$field['value'];
-                $tpl_field_id='';
-                if($template=='textarea'){
-                    $tpl_field_id=opf_quotes($field['id']);
-                } else {
-                    $tpl_field_value=opf_quotes($tpl_field_value);
-                }
-                $tpl->set_var('tpl_field_value', $tpl_field_value);
-                $tpl->set_var('tpl_field_id', $tpl_field_id);
-                $tpl_field_style=$field['style'];
-                $tpl->set_var('tpl_field_style', $tpl_field_style);
-                if(isset($field['checked']))
-                        $tpl_field_checked=$field['checked'];
-                        else $tpl_field_checked="";
-                $tpl->set_var('tpl_field_checked', $tpl_field_checked);
-                if(isset($field['options']))
-                        $tpl_field_options=$field['options'];
-                        else $tpl_field_options="";
-                $tpl->set_var('tpl_field_options', $tpl_field_options);
 
-                if($field['type']=='array'){
-                    foreach($field['values'] as $key=>$value){
-                        $tpl->set_var('tpl_key', $key);
-                        $tpl->set_var('tpl_value', $value);
-                        $keyid=uniqid(); 
-                        $list_growfield[]=$keyid; 
-                        $tpl->set_var('tpl_keyid', $keyid);
-                        $valid=uniqid(); 
-                        $list_growfield[]=$valid; 
-                        $tpl->set_var('tpl_valid', $valid);
-                        // first parse the block specific to this field type
-                        $tpl->set_block('page', 'array_row_block', 'extra_field');
-                           $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', 'array_row_block', false);   
-                    }
-                } else {  
-                   // in short, pretty much the same, but just do it only once
-                   $tpl->set_block('page', $template.'_block', 'extra_field');
-                   $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', $template.'_block', false);   
-                }
-            }
-            $tpl->set_var('TPL_EXTRA_FIELDS_BLOCK', $TPL_EXTRA_FIELDS_BLOCK);
-        } else { 
-                $tpl->set_var('TPL_EXTRA_FIELDS_BLOCK', "");
-        }
-
-        // if list_editarea is present update tpl_list_editarea
-        if($list_editarea <> ""){
-                $tpl_list_editarea = "var opf_editarea_list = new Array();";
-                $i = 0; 
-                foreach($list_editarea as $id) {
-                        $tpl_list_editarea .= 'opf_editarea_list['.$i++.'] = '."'$id';";
-                }
-                $tpl->set_var('tpl_list_editarea', $tpl_list_editarea);
-        }
-
-        // if list_growfield is present update tpl_list_growfield
-        if($list_growfield <> ""){
-                $tpl_list_growfield = "var opf_growfield_list = new Array();";
-                $i = 0; 
-                foreach($list_growfield as $id) {
-                        $tpl_list_growfield .= 'opf_growfield_list['.$i++.'] = '."'$id';";
-                }
-                $tpl->set_var('tpl_list_growfield', $tpl_list_growfield);
-        }
 
 
 // show page

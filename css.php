@@ -8,7 +8,7 @@ css.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -71,7 +71,8 @@ $tpl->set_file('page', "templates/css.htt");
 $tpl->set_var(
 array_merge($LANG['MOD_OPF'],
         array(
-        'tpl_save_url' => opf_quotes("$ToolUrl&amp;id=$id&amp;css_save=1&amp;".$admin->getFTAN(false)),
+        'tpl_save_url' => opf_quotes("$ToolUrl&amp;id=$id&amp;css_save=1"),
+        'FTAN' => $ftan,
         'tpl_id' => opf_quotes($id),
         'tpl_csspath' => opf_quotes($csspath),
         'tpl_css' => opf_quotes($css),

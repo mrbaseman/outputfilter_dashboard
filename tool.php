@@ -8,7 +8,7 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -43,6 +43,9 @@ if(!defined('WB_PATH')) die(header('Location: ../index.php'));
 $mod_dir = basename(dirname(__FILE__));
 require(WB_PATH.'/modules/'.$mod_dir.'/info.php');
 
+// Setting Global for use inside of method in WBCE
+global $LANG;
+
 // include module.functions.php 
 include_once(WB_PATH . '/framework/module.functions.php');
 
@@ -65,13 +68,7 @@ $ToolUrl = ADMIN_URL."/admintools/tool.php?tool=$ModDir";
 if($doSave){
     global $MESSAGE;
     if ( method_exists( $admin, 'checkFTAN' ) ) { 
-        if ( (!$admin->checkFTAN('GET')) 
-                /*
-                // Workaround for sp5 / sp6(?): 
-                // disable fTAN as a mitigation for a bug in the SecureToken class 
-                   && (!isset($_SESSION['TOKENS']))
-                */
-           ) {
+        if ( !$admin->checkFTAN()  ) {
               if ((ob_get_contents()=="") && (!headers_sent())){
                   $admin->print_header();
               }
@@ -89,12 +86,18 @@ if ((ob_get_contents()=="") && (!headers_sent())){
         $need_footer=TRUE;
 }
 
+$ftan="";
+if ( method_exists( $admin, 'getFTAN' ) ) { 
+  $ftan=$admin->getFTAN();
+}
+
 $now = time();
 
 // First, perform some actions
 
 // fetch values from $_GET[]
-$id        = opf_fetch_get( 'id', NULL, 'int');
+//$id        = opf_fetch_get( 'id', NULL, 'int');
+$id        = $admin->checkIDKEY('id', 0, 'GET');
 $dir       = opf_fetch_get( 'dir', NULL, 'string');
 $active    = opf_fetch_get( 'active', NULL, 'int');
 $delete    = opf_fetch_get( 'delete', FALSE, 'exists');
@@ -107,30 +110,30 @@ $funcname   = opf_fetch_post( 'funcname', NULL, 'string');
 
 // check file upload
 $upload_message = $upload_ok = ''; // both will be set in upload.php
-if(isset($_FILES['filterplugin']) && is_uploaded_file($_FILES['filterplugin']['tmp_name'])) {
+if(isset($_FILES['filterplugin']) && $doSave && is_uploaded_file($_FILES['filterplugin']['tmp_name'])) {
         include(dirname(__FILE__).'/upload.php');
 }
 // export a filter
 $export_message = $export_url = ''; // both will be set in export.php
 $export_ok = FALSE;
-if($export && $id && $doSave) {
+if($export && $id ) {
         $res = include(dirname(__FILE__).'/export.php');
         if($res) $export_url = $res;
 }
 
 // move up or down
-if($id && $dir=='up' && $doSave) {
+if($id && $dir=='up' ) {
         opf_move_up_one($id);
 }
-if($id && $dir=='down' && $doSave) {
+if($id && $dir=='down' ) {
         opf_move_down_one($id);
 }
 // toggle active
-if($id && $active!==NULL && $doSave){
+if($id && $active!==NULL ){
         opf_set_active($id, $active);
 }
 // delete userfunc-filter
-if($id && $delete && $doSave) {
+if($id && $delete ) {
         opf_unregister_filter($id);
 }
 // save filter
@@ -164,18 +167,16 @@ if($add && $doSave ){ //================================================ add ===
 
         require(WB_PATH."/modules/$ModDir/add_filter.php");
 
-} elseif($id && $edit && $doSave){ //=================================== edit =====
+} elseif($id && $edit ){ //=================================== edit =====
 
         require(WB_PATH."/modules/$ModDir/edit_filter.php");
 
-} elseif($id && $csspath && $doSave){ //================================= css =====
+} elseif($id && $csspath ){ //================================= css =====
 
         require(WB_PATH."/modules/$ModDir/css.php");
 
 } else { //============================================== admin-tool ==
 
-        // prevent links to be recalled by browser's back-button
-        $token =  $admin->getFTAN(false);
 
         // check if the corefiles are patched
         $patch_applied = opf_check_patched();
@@ -202,12 +203,16 @@ if($add && $doSave ){ //================================================ add ===
                 $filter['name_js_quoted'] = str_replace(array('\\','&#039;','&quot;'), array('\\\\','\\&#039;','\\&quot;'), $filter['name']);
                 $filter['desc'] =  opf_fetch_entry_language(unserialize($filter['desc']));
                 $filter['helppath'] =  opf_fetch_entry_language(unserialize($filter['helppath']));
-                $filter['desc'] = '<small>'.htmlspecialchars(substr($filter['desc'], 0, 40)).'...</small>';
+                $filter['desc'] = '<small>'.opf_correct_umlauts(htmlspecialchars(substr($filter['desc'], 0, 40))).'...</small>';
                 // mark last added filter
                 if($filter['id']==$id)
                         $filter['last_touched'] = TRUE;
                 else
                         $filter['last_touched'] = FALSE;
+                $filter_id=$filter['id'];
+                if(method_exists($admin, 'getIDKEY')){
+                     $filter_id=$admin->getIDKEY($filter_id);
+                } 
                 // line to separate filter-types
                 if($old_type!=$filter['type']) {
                         $old_type = $filter['type'];
@@ -216,15 +221,15 @@ if($add && $doSave ){ //================================================ add ===
                         $filter['sep_line'] = FALSE;
                 }
                 if($filter['active']) {
-                        $filter['active_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;active=0&amp;$token";
+                        $filter['active_link'] = "$ToolUrl&amp;id=$filter_id&amp;active=0";
                 } else {
-                        $filter['active_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;active=1&amp;$token";
+                        $filter['active_link'] = "$ToolUrl&amp;id=$filter_id&amp;active=1";
                 }
-                $filter['edit_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;edit=1&amp;$token";
+                $filter['edit_link'] = "$ToolUrl&amp;id=$filter_id&amp;edit=1";
                 if($filter['csspath']!='') {
                         $filter['csspath']         = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $filter['csspath']);
                         $filter['csspath']         = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$filter['plugin'], $filter['csspath']);
-                        $filter['css_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;csspath=".urlencode($filter['csspath'])."&amp;$token";
+                        $filter['css_link'] = "$ToolUrl&amp;id=$filter_id&amp;csspath=".urlencode($filter['csspath']);
                 } else {
                         $filter['css_link'] = '';
                 }
@@ -235,19 +240,19 @@ if($add && $doSave ){ //================================================ add ===
                 } else {
                         $filter['helppath_onclick'] = '';
                 }
-                if($filter['position']!=0) {
-                        $filter['moveup_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;dir=up&amp;$token";
+                if($filter['position']!=opf_get_position_min($filter['type'])) {
+                        $filter['moveup_link'] = "$ToolUrl&amp;id=$filter_id&amp;dir=up";
                 } else {
                         $filter['moveup_link'] = '';
                 }
                 if($filter['position']!=opf_get_position_max($filter['type'])) {
-                        $filter['movedown_link'] = "$ToolUrl&amp;id={$filter['id']}&amp;dir=down&amp;$token";
+                        $filter['movedown_link'] = "$ToolUrl&amp;id=$filter_id&amp;dir=down";
                 } else {
                         $filter['movedown_link'] = '';
                 }
                 if($filter['userfunc']||$filter['plugin']) {
-                        $filter['delete_link'] = $ToolUrl."&amp;id=".$filter['id']."&amp;delete=1&amp;$token";
-                        $filter['export_link'] = $ToolUrl."&amp;id=".$filter['id']."&amp;export=1&amp;$token";
+                        $filter['delete_link'] = $ToolUrl."&amp;id=$filter_id&amp;delete=1";
+                        $filter['export_link'] = $ToolUrl."&amp;id=$filter_id&amp;export=1";
                 } else {
                         $filter['delete_link'] = '';
                         $filter['export_link'] = '';
@@ -267,9 +272,9 @@ if($add && $doSave ){ //================================================ add ===
         $tpl->set_var(
         array_merge($LANG['MOD_OPF'],
                 array(
-                //'filterlist' => $filterlist,
-                'tpl_add_onclick' => "$ToolUrl&amp;add=1&amp;$token",
-                'tpl_upload_url' => "$ToolUrl&amp;$token",
+                'tpl_add_onclick' => "$ToolUrl&amp;add=1",
+                'tpl_upload_url' => "$ToolUrl",
+                'FTAN' => $ftan,
                 'tpl_help_onclick' => opf_quotes("javascript: return opf_popup('$ModUrl/docs/files/$help_lang/intro-txt.html');"),
                 'tpl_upload_message' => opf_quotes($upload_message),
                 'tpl_upload_ok' => $upload_ok,
@@ -332,7 +337,6 @@ if($add && $doSave ){ //================================================ add ===
         foreach($filterlist as $filter){
                 $row = ($row=='row_b'?'row_a':'row_b');
                 $tpl->set_var(array(
-                        'tpl_filter_id' => $filter['id'],
                         'tpl_filter_class' => ($filter['last_touched'])?"last-modified":opf_quotes($row),
                         'tpl_filter_active' => ($filter['active'])?"active":"inactive",
                         'tpl_filter_separator' => ($filter['sep_line'])?'class="row-separator"':'',
@@ -407,17 +411,5 @@ if($add && $doSave ){ //================================================ add ===
         print opf_filter_Comments($tpl->parse('output', 'main', false));
 }
 
-/* Workaround for broken FTANs in sp5 onwards:
-   - explicitly print out footer, 
-   - then destroy admin class to store ftans to session 
-   - wait for 0.1 seconds
-   - then explicitly exit (this is another command after the destructor of admin, 
-     which then stores the tokens to the session).
-*/
-
 $admin->print_footer();
-unset($admin);
-usleep(100000);
 exit(0);
-
-

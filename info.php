@@ -8,7 +8,7 @@ info.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -41,9 +41,10 @@ info.php
 $module_directory   = 'outputfilter_dashboard';
 $module_name        = 'OutputFilter Dashboard';
 $module_function    = 'tool';
-$module_version     = '1.4.5';
+$module_version     = '1.4.8';
 $module_platform    = 'WebsiteBaker 2.8.x';
 $module_author      = 'Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>';
 $module_license     = 'GNU General Public License, Version 3';
 $module_description = 'Admin-Tool to manage OutputFilter';
+$module_icon        = 'fa fa-magic';
 

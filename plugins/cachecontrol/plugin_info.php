@@ -27,20 +27,25 @@ if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
 /*
 Header: Version-History
 
-1.0.0 %(thorn; 17 Jan, 2010)%
-        - initial version
-1.0.1 %(mrbaseman; 11 Apr, 2015)%
-        - chaged to page mode
+1.0.3 %(mrbaseman; 21 Feb, 2016)%
+        - use sysvar-place holders
+
 1.0.2 %(mrbaseman; 11 Apr, 2015)%
         - made it compatible with RelURL
+
+1.0.1 %(mrbaseman; 11 Apr, 2015)%
+        - chaged to page mode
+
+1.0.0 %(thorn; 17 Jan, 2010)%
+        - initial version
 */
 
 $plugin_directory   = 'cachecontrol';
 $plugin_name        = 'Cache Control';
-$plugin_version     = '1.00.02';
+$plugin_version     = '1.0.3';
 $plugin_status      = 'beta';
 $plugin_platform    = '2.8';
-$plugin_author      = 'thorn';
+$plugin_author      = 'thorn, mrbaseman';
 $plugin_license     = 'GNU General Public License, Version 3 or later';
 $plugin_description = 'Filter to automatically prevent browsers from delivering outdated files (css,js) from cache';
 

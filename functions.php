@@ -8,7 +8,7 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -511,6 +511,22 @@ function opf_check_patched(){
     return $patch_applied;
 }
 
+
+// correct the umlauts in filter description in short 
+function opf_correct_umlauts($arg) {
+  $replacements = array (
+    '&amp;auml;' => '&auml;',
+    '&amp;ouml;' => '&ouml;',
+    '&amp;uuml;' => '&uuml;',
+    '&amp;Auml;' => '&Auml;',
+    '&amp;Ouml;' => '&Ouml;',
+    '&amp;Uuml;' => '&Uuml;',
+    '&amp;szlig;' => '&szlig;'
+  );
+  return str_replace(array_keys($replacements),array_values($replacements),$arg);
+}
+
+
 // get array of types
 function opf_get_types() {
 global $LANG;
@@ -571,6 +587,12 @@ function opf_get_data($id) {
 function opf_get_position_max($type) {
         return(opf_db_query_vars( "SELECT MAX(`position`) FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `type`='%s'", $type));
 }
+
+// get min position
+function opf_get_position_min($type) {
+        return(opf_db_query_vars( "SELECT MIN(`position`) FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `type`='%s'", $type));
+}
+
 
 // get position
 function opf_get_position($name) {

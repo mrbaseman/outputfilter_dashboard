@@ -25,6 +25,9 @@ along with opf Correct Date Format. If not, see <http://www.gnu.org/licenses/>.
 /*
 Header: Version-History
 
+1.2.1 %(mrbaseman; 21 Feb 2016)%
+        - use sysvar placeholders
+        
 1.2.0 %(thorn; 28 Dec 2009)%
         - updated module for use with OutputFilter-Dashboard
 
@@ -41,10 +44,10 @@ Header: Version-History
 
 $plugin_directory   = 'correct_date_format';
 $plugin_name        = 'Correct Date Format';
-$plugin_version     = '1.02.00';
+$plugin_version     = '1.2.1';
 $plugin_status      = 'beta';
 $plugin_platform    = '2.8';
-$plugin_author      = 'thorn';
+$plugin_author      = 'thorn, mrbaseman';
 $plugin_license     = 'GNU General Public License, Version 3 or later';
 $plugin_description = 'Filter to correct long-names in dates to be language-specific';
 

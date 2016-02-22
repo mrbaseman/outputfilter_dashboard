@@ -8,7 +8,7 @@ naturaldocs_txt/functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.5
+ * @version         1.4.8
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -145,10 +145,10 @@ require_once(dirname(__FILE__).'/functions.php');
 		configurl - %(string)% - URL to Filter-Settings (e.g. to an Admin-Tool). 
 		            E.g.: !'configurl' => ADMIN_URL.'/admintools/tool.php?tool=output_filter'!. Default: "".
 		csspath - %(string)% - Name and absolute path of CSS-file.
-		          E.g.: !'csspath' => WB_PATH.'/modules/opf_prettify/prettify/prettify.css'!. Default: "".
+		          E.g.: !'csspath' => '{SYSVAR:WB_PATH}/modules/opf_prettify/prettify/prettify.css'!. Default: "".
 		helppath - %(array)% - Array of name and absolute path to Help-files.
-		          E.g.: !'helppath' => array('DE'=>WB_URL.'/modules/opf_prettify/help_de.html',
-		                                     'EN'=>WB_URL.'/modules/opf_prettify/help_en.html')!. Default: "".
+		          E.g.: !'helppath' => array('DE'=>'{SYSVAR:WB_URL}/modules/opf_prettify/help_de.html',
+		                                     'EN'=>'{SYSVAR:WB_URL}/modules/opf_prettify/help_en.html')!. Default: "".
 		modules - %(string/array)% - List of modules (see below).
 		pages - %(string/array)%  - List of pages (see below).
 		pages_parent - %(string/array)%  - List of pages (see below).
@@ -200,7 +200,7 @@ require_once(dirname(__FILE__).'/functions.php');
 			'name'       => 'Searchresult Highlighting',
 			'type'       => OPF_TYPE_SECTION_LAST,
 			'funcname'   => 'opff_search_highlight',
-			'file'       => WB_PATH.'/modules/myfilter/filter.php',
+			'file'       => '{SYSVAR:WB_PATH}/modules/myfilter/filter.php',
 			'modules'    => 'all'
 		);
 		opf_register_filter($filter);

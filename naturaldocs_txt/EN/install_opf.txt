@@ -17,7 +17,7 @@ Topic: Before installation
         
         Futhermore, you will loose all installed "inline-filter" (filters that was added per "Add Filter"-Button).
         You may wish to backup those filters by copy&paste the filter-function to e.g. Notepad *before*
-        uninstalling. Than recreate those filters later on inside OutputFilter-Dashboard.
+        uninstalling. Then recreate those filters later on inside OutputFilter-Dashboard.
 
 Topic: Installation
 
@@ -26,7 +26,7 @@ Topic: Installation
         (see install_module_en.png)
 
 Topic: After installation
-        *Website Baker Version 2.8.3 sp6 and later as well as Website Baker Community Edition Version WBCE 1.1 onwards already contains all the adaptions needed. In the classical Website Baker you have to active the Outputfilter Dashboard explicitly in the settings of the Frontend Output Filter.*
+        *Website Baker Version 2.8.3 sp6 and later as well as Website Baker Community Edition Version WBCE 1.1 onwards already contain all the adaptions needed. In the classical Website Baker you have to active the Outputfilter Dashboard explicitly in the settings of the Frontend Output Filter.*
 
         For earlier versions you have to apply two patches to make this module work. 
         

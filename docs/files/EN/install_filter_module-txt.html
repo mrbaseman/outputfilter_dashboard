@@ -27,7 +27,7 @@ if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php'))
   opf_register_filter(array(
       'name' =&gt; 'Searchengine Highlighter',
       'type' =&gt; OPF_TYPE_PAGE_LAST,
-      'file' =&gt; WB_PATH.'/modules/mymodule/filter.php',
+      'file' =&gt; '{SYSVAR:WB_PATH}/modules/mymodule/filter.php',
       'funcname' =&gt; 'opff_searchengine_highlight',
       'desc' =&gt; &quot;Google-Search-Highlighter&quot;,
       'active' =&gt; 1,

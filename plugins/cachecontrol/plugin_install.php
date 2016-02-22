@@ -27,11 +27,11 @@ if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
 opf_register_filter(array(
         'name' => 'Cache Control',
         'type' => OPF_TYPE_PAGE,
-        'file' => WB_PATH.'/modules/outputfilter_dashboard/plugins/cachecontrol/filter.php',
+        'file' =>  '{OPF:PLUGIN_PATH}/filter.php',
         'funcname' => 'opff_cachecontrol',
         'desc' => array(
                 'EN' => "Prevent Browsers from delivering outdated files (css, js) from it's cache.\nKeep care that this filter is called last!",
-                'DE' => "Verhindert, da&szlig; Browser veralterte CSS- oder JS-Dateien aus ihrem Cache ausliefern.\nAchten Sie darauf, da&szlig; dieser Filter als letzter aufgerufen wird!"
+                'DE' => "Verhindert, dass Browser veralterte CSS- oder JS-Dateien aus ihrem Cache ausliefern.\nAchten Sie darauf, dass dieser Filter als letzter aufgerufen wird!"
         ),
         'modules' => 'all',
         'plugin' => 'cachecontrol',

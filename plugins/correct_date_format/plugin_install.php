@@ -34,20 +34,22 @@ opf_register_filter(array(
                 'DE' => "Datumsangaben, wie \"Monday, 1st January, 2008\" erscheinen immer in englisch, auch wenn als Sprache Deutsch eingestellt ist. Dieser Filter behebt das Problem, und zeigt sie in der Form \"Montag, 1. Januar, 2008\" an.\nM&ouml;glicherweise funktioniert der Filter auf einem Windows-System nicht richtig.\nDer Filter Ben&ouml;tigt PHP 4.3.3 oder h&ouml;her.\nKonfiguration:\nSpracheinstellung: Wenn der Filter nicht automatisch funktioniert, kann hier eine andere 'locale'-Einstellung eingetragen werden.\nDatumsformat: Das gew&uuml;nschte Datumsformat kann beliebig Formatiert werden."
         ),
         'modules' => 'download_gallery,news',
-        'file' => WB_PATH.'/modules/outputfilter_dashboard/plugins/correct_date_format/filter.php',
+        'file' => '{OPF:PLUGIN_PATH}/filter.php',
         'plugin' => 'correct_date_format',
         'active' => 1,
         'allowedit' => 0,
         'allowedittarget' => 1,
         'configurl'=> '',
-        'additional_fields' => array(
+        'additional_fields' => 
+           array(
                 array(
                         'label' => array('EN'=>'Locale','DE'=>'Spracheinstellung'),
                         'variable' => 'locale',
                         'type' => 'text',
                         'name' => 'af_locale',
                         'value' => '',
-                        'style' => 'width: 98%;'),
+                        'style' => 'width: 98%;'
+                ),
                 array(
                         'label' => array('EN'=>'Date format','DE'=>'Datumsformat'),
                         'variable' => 'date_formats',
@@ -58,6 +60,8 @@ opf_register_filter(array(
                                 'M d Y'     => '%b %d. %Y',
                                 'd M Y'     => '%d. %b %Y',
                                 'jS F, Y'   => '%e. %B %Y',
-                                'l, jS F, Y'=> '%A, %e. %B %Y'))
-        )
+                                'l, jS F, Y'=> '%A, %e. %B %Y'
+                                )
+                        )
+                )
 ));

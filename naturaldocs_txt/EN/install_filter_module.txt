@@ -24,7 +24,7 @@ install.php:
         >  opf_register_filter(array(
         >      'name' => 'Searchengine Highlighter',
         >      'type' => OPF_TYPE_PAGE_LAST,
-        >      'file' => WB_PATH.'/modules/mymodule/filter.php',
+        >      'file' => '{SYSVAR:WB_PATH}/modules/mymodule/filter.php',
         >      'funcname' => 'opff_searchengine_highlight',
         >      'desc' => "Google-Search-Highlighter",
         >      'active' => 1,
