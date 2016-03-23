@@ -8,7 +8,7 @@ upgrade.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -92,14 +92,14 @@ $info_file = 'plugin_info.php';
 $install_dir = dirname(__FILE__).'/plugins/';
 
 $plugins = array ( 
-        'cachecontrol',
-        'correct_date_format'
+    'cachecontrol',
+    'correct_date_format'
 );
 
 foreach($plugins as $plugin_dir){
-        // run install-script
-        if(file_exists($install_dir.$plugin_dir.$install_file)) {
-                require($install_dir.$plugin_dir.$install_file);
-        }
+    // run install-script
+    if(file_exists($install_dir.$plugin_dir.$install_file)) {
+        require($install_dir.$plugin_dir.$install_file);
+    }
 }
 

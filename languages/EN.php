@@ -8,7 +8,7 @@ languages/EN.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -100,7 +100,7 @@ $LANG['MOD_OPF']['TXT_EDITCSS'] = 'Edit CSS';
 
 $LANG['MOD_OPF']['TXT_EXPORT_FAILED'] = 'Export Failed';
 
-$LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'] = 'Export Successfull';
+$LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'] = 'Export Successful';
 
 $LANG['MOD_OPF']['TXT_OK'] = 'OK';
 
@@ -114,7 +114,7 @@ $LANG['MOD_OPF']['TXT_OUTPUTFILTER_DASHBOARD'] = 'OutputFilter - Dashboard';
 
 $LANG['MOD_OPF']['TXT_PATCH_COREFILES'] = 'You need to patch two core-files to make this AdminTool work. <a href = "%s">Please read documentation</a>';
 
-$LANG['MOD_OPF']['TXT_ACTIVATE_JS'] = 'Please activate Javascript to use this AdminTool!';
+$LANG['MOD_OPF']['TXT_ACTIVATE_JS'] = 'Note: To take advantage of all comfort features offered by this module please activate javascript.';
 
 $LANG['MOD_OPF']['TXT_ADD_FILTER'] = 'Add a filter';
 

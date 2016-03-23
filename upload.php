@@ -8,7 +8,7 @@ upload.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -66,12 +66,12 @@ $upload_ok = FALSE;
 // check for uploaded plugin
 $upload_result = opf_upload_check('filterplugin', '.zip', 'zip');
 if(!is_array($upload_result)) {
-        $upload_message = 'upload failed';
-        return;
+    $upload_message = 'upload failed';
+    return;
 }
 if(!$upload_result['status']) {
-        $upload_message = $upload_result['result'];
-        return;
+    $upload_message = $upload_result['result'];
+    return;
 }
 $upload_id = $upload_result['result'];
 
@@ -91,14 +91,14 @@ $text_failed = $LANG['MOD_OPF']['TXT_FAILED_TO_UPLOAD'];
 
 // check write permissions
 if(!is_writable($install_dir)) {
-        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_DIR_WRITE_FAILED']);
-        return;
+    $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_DIR_WRITE_FAILED']);
+    return;
 }
 
 // Try to move uploaded plugin to temp
 if(!opf_upload_move($upload_id, $temp_dir, $temp_file)) {
-        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_UPLOAD_FAILED']);
-        return;
+    $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_UPLOAD_FAILED']);
+    return;
 }
 
 // make temp dir
@@ -108,30 +108,30 @@ opf_io_mkdir($temp_unzip);
 $archive = new PclZip($temp_dir.$temp_file);
 $list = $archive->extract(PCLZIP_OPT_PATH, $temp_unzip);
 if(!$list || !file_exists($temp_unzip.$info_file)) {
-        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NOT_A_FILTER']);
-        @unlink($temp_dir.$temp_file);
-        // Cleanup temp
-        opf_io_rmdir($temp_unzip);
-        return;
+    $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NOT_A_FILTER']);
+    @unlink($temp_dir.$temp_file);
+    // Cleanup temp
+    opf_io_rmdir($temp_unzip);
+    return;
 }
 $plugin_directory = opf_plugin_info_read($temp_unzip.$info_file);
 
 if(!$plugin_directory) {
-        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NOT_A_FILTER']);
-        @unlink($temp_dir.$temp_file);
-        return;
+    $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NOT_A_FILTER']);
+    @unlink($temp_dir.$temp_file);
+    return;
 }
 
 // Check version
 if(file_exists($install_dir.$plugin_directory)) {
-        $old_version =  opf_plugin_info_read($install_dir.$plugin_directory.'/'.$info_file, 'plugin_version');
-        $new_version =  opf_plugin_info_read($temp_unzip.$info_file, 'plugin_version');
-        if(version_compare($old_version, $new_version, '>')) {
-                $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_ALREADY_INSTALLED']);
-                opf_io_rmdir($temp_unzip);
-                @unlink($temp_dir.$temp_file);
-                return;
-        }
+    $old_version =  opf_plugin_info_read($install_dir.$plugin_directory.'/'.$info_file, 'plugin_version');
+    $new_version =  opf_plugin_info_read($temp_unzip.$info_file, 'plugin_version');
+    if(version_compare($old_version, $new_version, '>')) {
+        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_ALREADY_INSTALLED']);
+        opf_io_rmdir($temp_unzip);
+        @unlink($temp_dir.$temp_file);
+        return;
+    }
 }
 
 // Cleanup temp
@@ -143,9 +143,9 @@ opf_io_mkdir($plugin_dir);
 // unzip plugin directly to $plugin_dir
 $list = $archive->extract(PCLZIP_OPT_PATH, $plugin_dir);
 if(!$list) {
-        $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_UNZIP_FAILED']);
-        @unlink($temp_dir.$temp_file);
-        return;
+    $upload_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_UNZIP_FAILED']);
+    @unlink($temp_dir.$temp_file);
+    return;
 }
 
 // delete archive
@@ -153,11 +153,11 @@ if(!$list) {
 
 // chmod new files
 foreach(opf_io_filelist($plugin_dir) as $file)
-        opf_io_chmod($file);
+    opf_io_chmod($file);
 
 // run install-script
 if(file_exists($plugin_dir.$install_file)) {
-        require($plugin_dir.$install_file);
+    require($plugin_dir.$install_file);
 }
 
 $upload_message = $LANG['MOD_OPF']['TXT_PLUGIN_UPLOAD_SUCCESS'];

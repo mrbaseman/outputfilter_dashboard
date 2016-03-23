@@ -5,6 +5,15 @@ Header: Version-History
 	*this version is a major re-engineering of the module with the goal to use it without PMF.*
 	Special thanks to all who have tested and especially to NorHei for fruitful discussions and for providing additional testing ressources.
 
+1.4.9 %(mrbaseman, 23 Mar 2016)%
+	- change cachecontrols filter type to page(last)
+	- realign code: wrap long lines and set tab width=4
+	- make help browser work without javascript
+	- fix css edit for filters that supply css files
+	- provide export download link when javascript is disabled
+	- allow to delete filters even without javascript
+	- added French and Italian language support
+
 1.4.8 %(mrbaseman, 21 Feb 2016)%
 	- remove unused code part from add_filter to fix array conversion warnings
 	- update plugin filters to use new placeholders introduced in 1.4.4

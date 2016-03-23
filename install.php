@@ -8,7 +8,7 @@ install.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -57,31 +57,31 @@ opf_io_mkdir(WB_PATH.MEDIA_DIRECTORY.'/opf_plugins');
 
 opf_db_run_query("DROP TABLE IF EXISTS `".TABLE_PREFIX."mod_outputfilter_dashboard`");
 opf_db_run_query("CREATE TABLE `".TABLE_PREFIX."mod_outputfilter_dashboard` (
-        `id` INT NOT NULL AUTO_INCREMENT,
-        `userfunc` TINYINT NOT NULL DEFAULT '0',
-        `position` INT NOT NULL DEFAULT '0',
-        `active` TINYINT NOT NULL DEFAULT '1',
-        `allowedit` TINYINT NOT NULL DEFAULT '0',
-        `allowedittarget` TINYINT NOT NULL DEFAULT '0',
-        `name` VARCHAR(249) NOT NULL,
-        `func` TEXT NOT NULL,
-        `type` VARCHAR(255) NOT NULL,
-        `file` VARCHAR(255) NOT NULL,
-        `csspath` VARCHAR(255) NOT NULL,
-        `funcname` VARCHAR(255) NOT NULL,
-        `configurl` VARCHAR( 255 ) NOT NULL,
-        `plugin` VARCHAR( 255 ) NOT NULL,
-        `helppath` TEXT NOT NULL,
-        `modules` TEXT NOT NULL,
-        `desc` LONGTEXT NOT NULL,
-        `pages` TEXT NOT NULL,
-        `pages_parent` TEXT NOT NULL,
-        `additional_values` LONGTEXT NOT NULL,
-        `additional_fields` TEXT NOT NULL,
-        `additional_fields_languages` TEXT NOT NULL,
-        PRIMARY KEY (`id`),
-        UNIQUE (`name`),
-        INDEX (`type`)
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userfunc` TINYINT NOT NULL DEFAULT '0',
+    `position` INT NOT NULL DEFAULT '0',
+    `active` TINYINT NOT NULL DEFAULT '1',
+    `allowedit` TINYINT NOT NULL DEFAULT '0',
+    `allowedittarget` TINYINT NOT NULL DEFAULT '0',
+    `name` VARCHAR(249) NOT NULL,
+    `func` TEXT NOT NULL,
+    `type` VARCHAR(255) NOT NULL,
+    `file` VARCHAR(255) NOT NULL,
+    `csspath` VARCHAR(255) NOT NULL,
+    `funcname` VARCHAR(255) NOT NULL,
+    `configurl` VARCHAR( 255 ) NOT NULL,
+    `plugin` VARCHAR( 255 ) NOT NULL,
+    `helppath` TEXT NOT NULL,
+    `modules` TEXT NOT NULL,
+    `desc` LONGTEXT NOT NULL,
+    `pages` TEXT NOT NULL,
+    `pages_parent` TEXT NOT NULL,
+    `additional_values` LONGTEXT NOT NULL,
+    `additional_fields` TEXT NOT NULL,
+    `additional_fields_languages` TEXT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE (`name`),
+    INDEX (`type`)
 ) ENGINE = MYISAM");
 
 opf_io_rmdir(dirname(__FILE__).'/naturaldocs_txt');
@@ -94,14 +94,14 @@ $info_file = 'plugin_info.php';
 $install_dir = dirname(__FILE__).'/plugins/';
 
 $plugins = array ( 
-        'cachecontrol',
-        'correct_date_format'
+    'cachecontrol',
+    'correct_date_format'
 );
 
 
 foreach($plugins as $plugin_dir){
-        // run install-script
-        if(file_exists($install_dir.$plugin_dir.$install_file)) {
-                require($install_dir.$plugin_dir.$install_file);
-        }
+    // run install-script
+    if(file_exists($install_dir.$plugin_dir.$install_file)) {
+        require($install_dir.$plugin_dir.$install_file);
+    }
 }

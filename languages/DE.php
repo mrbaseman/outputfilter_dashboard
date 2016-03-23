@@ -8,7 +8,7 @@ languages/DE.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -54,7 +54,7 @@ $LANG['MOD_OPF']['TXT_MODULE_TREE']='W&auml;len Sie im Modul-Baum unten die Modu
 
 $LANG['MOD_OPF']['TXT_TYPE_LAST']='Ein <em>Page-Type</em> oder <em>Page-Type (last)</em> Filter wird auf jede angezeigte Seite als ganzes angewendet (inclusive den output von z.B. snippets oder des Templates an sich).'; 
 
-$LANG['MOD_OPF']['TXT_SUB_PAGES']='W&auml;hlen Sie unten (Unter-)Seiten aus.<br />Der Filter wird auf allle ausgew&auml;hlten Seiten, die die entsprechenden ausgew&auml;hlten Module aus dem obigen &quot;Modul-Baum&quot; enthalten, angewendet.'; 
+$LANG['MOD_OPF']['TXT_SUB_PAGES']='W&auml;hlen Sie unten (Unter-)Seiten aus.<br />Der Filter wird auf alle ausgew&auml;hlten Seiten, die die entsprechenden ausgew&auml;hlten Module aus dem obigen &quot;Modul-Baum&quot; enthalten, angewendet.'; 
 
 $LANG['MOD_OPF']['TXT_FILTER_FUNC'] = 'Geben Sie die Filter-Funktion hier ein.';
 
@@ -116,7 +116,7 @@ $LANG['MOD_OPF']['TXT_OUTPUTFILTER_DASHBOARD'] = 'OutputFilter - Dashboard';
 
 $LANG['MOD_OPF']['TXT_PATCH_COREFILES'] = 'Damit dieses AdminTool funktioniert m&uuml;ssen noch zwei Dateien ver&auml;ndert werden. <a href="%s">Bitte lesen Sie die Dokumentation</a>';
 
-$LANG['MOD_OPF']['TXT_ACTIVATE_JS']  = 'Bitte aktivieren Sie Javascript um dieses AdminTool zu benutzen!';
+$LANG['MOD_OPF']['TXT_ACTIVATE_JS']  = 'Hinweis: Zur vollt&auml;ndigen Nutzung aller Komfort-Features ben&ouml;tigt dieses Modul Javascript.';
 
 $LANG['MOD_OPF']['TXT_ADD_FILTER']  = 'Filter hinzuf&uuml;gen';
 

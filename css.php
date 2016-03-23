@@ -8,7 +8,7 @@ css.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -60,7 +60,7 @@ if(!$admin->get_permission('admintools')) die(header('Location: ../../index.php'
 // get content of csspath
 $css = '';
 if(file_exists($csspath) && is_readable($csspath)) // csspath has to be local, file_exists() and is_readable() can't handle remote files
-        $css = file_get_contents($csspath);
+    $css = file_get_contents($csspath);
 
 // template
 $tpl = new Template(WB_PATH.'/modules/outputfilter_dashboard');
@@ -70,16 +70,16 @@ $tpl->set_file('page', "templates/css.htt");
 // fill template vars
 $tpl->set_var(
 array_merge($LANG['MOD_OPF'],
-        array(
-        'tpl_save_url' => opf_quotes("$ToolUrl&amp;id=$id&amp;css_save=1"),
-        'FTAN' => $ftan,
-        'tpl_id' => opf_quotes($id),
-        'tpl_csspath' => opf_quotes($csspath),
-        'tpl_css' => opf_quotes($css),
-        'tpl_cancel_onclick' => opf_quotes("javascript: window.location = '$ToolUrl'"),
-        'WB_URL' => WB_URL,
-        'MOD_URL' => WB_URL.'/modules/'.$module_directory,
-        'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images'
+    array(
+    'tpl_save_url' => opf_quotes("$ToolUrl&amp;id=$id&amp;css_save=1"),
+    'FTAN' => $ftan,
+    'tpl_id' => opf_quotes($id),
+    'tpl_csspath' => opf_quotes($csspath),
+    'tpl_css' => opf_quotes($css),
+    'tpl_cancel_onclick' => opf_quotes("javascript: window.location = '$ToolUrl'"),
+    'WB_URL' => WB_URL,
+    'MOD_URL' => WB_URL.'/modules/'.$module_directory,
+    'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images'
 
 )));
 

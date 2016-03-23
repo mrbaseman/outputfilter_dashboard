@@ -90,11 +90,11 @@ function opff_search_highlight(&amp;$content, $page_id, $section_id, $module, $w
 'pages_parent' =&gt; '12,21' // written as list
 'pages_parent' =&gt; array('12', '21') // written as array</pre></blockquote><h4 class=CHeading>additional_fields</h4><p>Arrays of additional configuration elements.</p><p>In case the filter need some additional config-elements but it doesn&rsquo;t has its own Settings-Page / Admin-Tool, you can add some fields using <span class="mypriv_var">additional_fields</span>.&nbsp; Possible field-types are</p><table border=0 cellspacing=0 cellpadding=0 class=CDescriptionList><tr><td class=CDLEntry>text</td><td class=CDLDescription>normal HTML text-field</td></tr><tr><td class=CDLEntry>textarea</td><td class=CDLDescription>normal HTML textarea</td></tr><tr><td class=CDLEntry>editarea</td><td class=CDLDescription>textarea with activated editarea (Editor)</td></tr><tr><td class=CDLEntry>radio</td><td class=CDLDescription>normal HTML radio-fields</td></tr><tr><td class=CDLEntry>checkbox</td><td class=CDLDescription>normal HTML checkbox-fields</td></tr><tr><td class=CDLEntry>select</td><td class=CDLDescription>normal HTML select-field</td></tr><tr><td class=CDLEntry>array</td><td class=CDLDescription>simple array broken up into several text-fields</td></tr></table><p><span class="mypriv_var">allowedit</span> has no affect on these fields.</p><p>See <a href="#opf_filter_get_additional_values" class=LFunction id=link19 onMouseOver="ShowTip(event, 'tt18', 'link19')" onMouseOut="HideTip('tt18')">opf_filter_get_additional_values</a> on how to retrieve values from these fields.</p><p>Example: Adding various fields</p><blockquote><pre class="prettyprint">'additional_fields' =&gt; array(
     array( // add text-field &quot;Name&quot;
-        'type' =&gt; 'text',        // type of field
+        'type' =&gt; 'text',    // type of field
         'label' =&gt; 'Name',       // Label for the text-field
         'variable' =&gt; 'name',    // name of variable
         'name' =&gt; 'af_name',     // name for HTML name-attribute
-        'value' =&gt; '',           // default-value
+        'value' =&gt; '',       // default-value
         'style' =&gt; 'width: 98%;' // style (only for text, textarea and editarea for width and height)
     ),
     array( // add textarea &quot;Long-text&quot;
@@ -110,7 +110,7 @@ function opff_search_highlight(&amp;$content, $page_id, $section_id, $module, $w
         'label' =&gt; 'Colour',
         'variable' =&gt; 'colour',
         'name' =&gt; 'af_colour',
-        'value' =&gt; array(        // options
+        'value' =&gt; array(    // options
             'red'   =&gt; 'Red',
             'blue'  =&gt; 'Blue',
             'green' =&gt; 'Green'
@@ -128,13 +128,13 @@ function opff_search_highlight(&amp;$content, $page_id, $section_id, $module, $w
     )
 )</pre></blockquote><p>Example: Adding fields with language-support</p><blockquote><pre class="prettyprint">'additional_fields' =&gt; array(
     array(
-        'type' =&gt; 'text',             // type of field
-        'label' =&gt; array(              // Language-dependent string
+        'type' =&gt; 'text',         // type of field
+        'label' =&gt; array(          // Language-dependent string
             'EN'=&gt;'Locale',
             'DE'=&gt;'Spracheinstellung'
         ),
         'variable' =&gt; 'locale',       // name of variable
-        'name' =&gt; 'af_locale',        // name for name-attribute
+        'name' =&gt; 'af_locale',    // name for name-attribute
         'value' =&gt; 'de_DE.utf-8',     // default-value
         'style' =&gt; 'width: 98%;'      // style (only for text, textarea and editarea for width and height)
     ),
@@ -158,7 +158,7 @@ function opff_search_highlight(&amp;$content, $page_id, $section_id, $module, $w
         'label' =&gt; array('EN'=&gt;'Colour','DE'=&gt;'Farbe'),
         'variable' =&gt; 'colour',
         'name' =&gt; 'af_colour',
-        'value' =&gt; array(        // options
+        'value' =&gt; array(    // options
             'red'   =&gt; array('EN'=&gt;'Red','DE'=&gt;'Rot'),
             'blue'  =&gt; array('EN'=&gt;'Blue','DE'=&gt;'Blau'),
             'green' =&gt; array('EN'=&gt;'Green','DE'=&gt;'Gr&uuml;n')

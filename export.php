@@ -8,7 +8,7 @@ export.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -63,13 +63,13 @@ if (file_exists (WB_PATH.'/include/pclzip/pclzip.lib.php'))
    require_once(WB_PATH.'/include/pclzip/pclzip.lib.php');
 
 /*
-        Private File: export.php
+    Private File: export.php
 
-        Section: Description
+    Section: Description
 
-        Topic: Internals
+    Topic: Internals
 
-        This file allows to export a single Filter to a installable zip-archive.
+    This file allows to export a single Filter to a installable zip-archive.
 
 
 
@@ -86,14 +86,14 @@ $text_failed = $LANG['MOD_OPF']['TXT_EXPORT_FAILED_PLUGIN'];
 
 // check write permissions
 if(!is_writable($temp_dir)) {
-        $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_WRITE_DENIED'], $temp_dir);
-        return(FALSE);
+    $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_WRITE_DENIED'], $temp_dir);
+    return(FALSE);
 }
 
 // get filter-data
 if(!$filter = opf_get_data($id)) {
-        $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_FILTER']);
-        return(FALSE);
+    $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_FILTER']);
+    return(FALSE);
 }
 $filter['desc'] = unserialize($filter['desc']);
 $filter['modules'] = unserialize($filter['modules']);
@@ -102,10 +102,10 @@ $filter['additional_fields'] = unserialize($filter['additional_fields']);
 $filter['additional_fields_languages'] = unserialize($filter['additional_fields_languages']);
 // update additional_fields: copy data from additional_values to additional_fields
 if(is_array($filter['additional_fields'])) {
-        foreach($filter['additional_fields'] as $i=>$f) {
-                $filter['additional_fields'][$i]['value']
-                        = $filter['additional_values'][$filter['additional_fields'][$i]['variable']];
-        }
+    foreach($filter['additional_fields'] as $i=>$f) {
+        $filter['additional_fields'][$i]['value']
+            = $filter['additional_values'][$filter['additional_fields'][$i]['variable']];
+    }
 }
 unset($filter['additional_values'],
       $filter['id'],
@@ -115,19 +115,19 @@ unset($filter['additional_values'],
 
 
 if($filter['plugin']=='' && $filter['userfunc']==0) {
-        $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_EXPORT']);
-        return(FALSE);
+    $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_EXPORT']);
+    return(FALSE);
 }
 if($filter['plugin']!='' && !file_exists($plugin_dir.$filter['plugin'])) {
-        $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_SUCH_DIR']);
-        return(FALSE);
+    $export_message = sprintf($text_failed, $LANG['MOD_OPF']['TXT_NO_SUCH_DIR']);
+    return(FALSE);
 }
 
 // get name for zip-archive
 if($filter['plugin']!='')
-        $temp_file = 'opf_export_'.$filter['plugin'].'.zip';
+    $temp_file = 'opf_export_'.$filter['plugin'].'.zip';
 else
-        $temp_file = 'opf_export_'.$temp_name.'.zip';
+    $temp_file = 'opf_export_'.$temp_name.'.zip';
 
 opf_io_mkdir($temp_dir.$temp_name);
 
@@ -136,56 +136,56 @@ $archive = new PclZip($temp_dir.$temp_file);
 
 // plugin-filter
 if($filter['plugin']!='') {
-        // get filter-data serialised
-        $filter_ser = serialize($filter);
-        $filter_ser = str_replace(array('\\',"'"), array('\\\\',"\'"), $filter_ser);
+    // get filter-data serialised
+    $filter_ser = serialize($filter);
+    $filter_ser = str_replace(array('\\',"'"), array('\\\\',"\'"), $filter_ser);
 
-        $file_install = <<<EOD
+    $file_install = <<<EOD
 <?php
 if(!defined('WB_PATH')) die(header('Location: index.php'));  
 opf_register_filter('$filter_ser', TRUE);
 EOD;
-        if($fh = fopen($temp_dir.$temp_name.'/plugin_install.php', 'wb')) {
-                fputs($fh, $file_install);
-                fclose($fh);
-        } else {
-                $export_message = $export_message = sprintf($text_failed,
-                   $LANG['MOD_OPF']['TXT_WRITE_FAILED'], $temp_dir.$temp_name.'/plugin_install.php');
-                rm_full_dir($temp_dir.$temp_name);
-                return(FALSE);
-        }
+    if($fh = fopen($temp_dir.$temp_name.'/plugin_install.php', 'wb')) {
+        fputs($fh, $file_install);
+        fclose($fh);
+    } else {
+        $export_message = $export_message = sprintf($text_failed,
+           $LANG['MOD_OPF']['TXT_WRITE_FAILED'], $temp_dir.$temp_name.'/plugin_install.php');
+        rm_full_dir($temp_dir.$temp_name);
+        return(FALSE);
+    }
 
-        if(!$archive->create($plugin_dir.$filter['plugin'],
-                             PCLZIP_OPT_REMOVE_PATH, $plugin_dir.$filter['plugin'])) {
-                $export_message = sprintf($text_failed, $archive->errorInfo(true));
-                rm_full_dir($temp_dir.$temp_name);
-                return(FALSE);
-        }
-        if(!$archive->delete(PCLZIP_OPT_BY_NAME, 'plugin_install.php')) {
-                $export_message = sprintf($text_failed, $archive->errorInfo(true));
-                rm_full_dir($temp_dir.$temp_name);
-                return(FALSE);
-        }
-        if(!$archive->add($temp_dir.$temp_name.'/plugin_install.php',
-                                          PCLZIP_OPT_REMOVE_PATH, $temp_dir.$temp_name)) {
-                $export_message = sprintf($text_failed, $archive->errorInfo(true));
-                rm_full_dir($temp_dir.$temp_name);
-                return(FALSE);
-        }
+    if(!$archive->create($plugin_dir.$filter['plugin'],
+                 PCLZIP_OPT_REMOVE_PATH, $plugin_dir.$filter['plugin'])) {
+        $export_message = sprintf($text_failed, $archive->errorInfo(true));
+        rm_full_dir($temp_dir.$temp_name);
+        return(FALSE);
+    }
+    if(!$archive->delete(PCLZIP_OPT_BY_NAME, 'plugin_install.php')) {
+        $export_message = sprintf($text_failed, $archive->errorInfo(true));
+        rm_full_dir($temp_dir.$temp_name);
+        return(FALSE);
+    }
+    if(!$archive->add($temp_dir.$temp_name.'/plugin_install.php',
+                      PCLZIP_OPT_REMOVE_PATH, $temp_dir.$temp_name)) {
+        $export_message = sprintf($text_failed, $archive->errorInfo(true));
+        rm_full_dir($temp_dir.$temp_name);
+        return(FALSE);
+    }
 
 
 } else {
 
 
 // inline-filter
-        // create a plugin-filter
+    // create a plugin-filter
 
-        $filter['plugin'] = $temp_name;
-        // get filter-data serialised
-        $filter_ser = serialize($filter);
-        $filter_ser = str_replace(array('\\',"'"), array('\\\\',"\'"), $filter_ser);
+    $filter['plugin'] = $temp_name;
+    // get filter-data serialised
+    $filter_ser = serialize($filter);
+    $filter_ser = str_replace(array('\\',"'"), array('\\\\',"\'"), $filter_ser);
 
-        $file_info = <<<EOD
+    $file_info = <<<EOD
 <?php
 \$plugin_directory   = '$temp_name';
 \$plugin_name        = '{$filter['name']}';
@@ -196,37 +196,37 @@ EOD;
 \$plugin_license     = '';
 \$plugin_description = '';
 EOD;
-        $file_index = <<<EOD
+    $file_index = <<<EOD
 <?php
 @header('HTTP/1.1 301 Moved Permanently',TRUE,301);
 exit(header('Location: ../index.php'));
 EOD;
-        $file_install = <<<EOD
+    $file_install = <<<EOD
 <?php
 if(!defined('WB_PATH')) die(header('Location: index.php'));  
 opf_register_filter('$filter_ser', TRUE);
 EOD;
-        $file_contents = array('plugin_info.php'=>$file_info,
-                               'index.php'=>$file_index,
-                               'plugin_install.php'=>$file_install);
-        foreach($file_contents as $file=>$contents) {
-                if($fh = fopen($temp_dir.$temp_name.'/'.$file, 'wb')) {
-                        fputs($fh, $contents);
-                        fclose($fh);
-                } else {
-                        $export_message = sprintf($text_failed,
-                                $LANG['MOD_OPF']['TXT_WRITE_FAILED'], $temp_dir.$temp_name.'/'.$file);
-                        rm_full_dir($temp_dir.$temp_name);
-                        return(FALSE);
-                }
+    $file_contents = array('plugin_info.php'=>$file_info,
+                   'index.php'=>$file_index,
+                   'plugin_install.php'=>$file_install);
+    foreach($file_contents as $file=>$contents) {
+        if($fh = fopen($temp_dir.$temp_name.'/'.$file, 'wb')) {
+            fputs($fh, $contents);
+            fclose($fh);
+        } else {
+            $export_message = sprintf($text_failed,
+                $LANG['MOD_OPF']['TXT_WRITE_FAILED'], $temp_dir.$temp_name.'/'.$file);
+            rm_full_dir($temp_dir.$temp_name);
+            return(FALSE);
         }
+    }
 
-        // zip it
-        if(!$archive->create($temp_dir.$temp_name,
-                                     PCLZIP_OPT_REMOVE_PATH, $temp_dir.$temp_name)) {
+    // zip it
+    if(!$archive->create($temp_dir.$temp_name,
+                     PCLZIP_OPT_REMOVE_PATH, $temp_dir.$temp_name)) {
     $export_message = sprintf($text_failed, $archive->errorInfo(true));
-                rm_full_dir($temp_dir.$temp_name);
-                return(FALSE);
+        rm_full_dir($temp_dir.$temp_name);
+        return(FALSE);
   }
 }
 

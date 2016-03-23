@@ -8,7 +8,7 @@ add_filter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.8
+ * @version         1.4.9
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -84,9 +84,9 @@ $allowedittarget = 1;
 $filter_type_options='';
 
 foreach($types as $value=>$text){
-        $filter_type_options .= "<option value=\"$value\" ";
-        if($type==$value) $filter_type_options .= 'selected="selected"';
-        $filter_type_options .= ">".opf_quotes($text)."</option>";
+    $filter_type_options .= "<option value=\"$value\" ";
+    if($type==$value) $filter_type_options .= 'selected="selected"';
+    $filter_type_options .= ">".opf_quotes($text)."</option>";
 }
 
 
@@ -108,55 +108,55 @@ $tpl->set_file('page', 'templates/add_edit.htt');
 // fill template vars
 $tpl->set_var(
 array_merge($LANG['MOD_OPF'],
-        array(
-        // only inline-filters and filters with 'allowedit' are editable
-        'tpl_filter_readonly' => ($userfunc||$allowedit)?'':'readonly="readonly"',
-        'tpl_filter_disabled' => ($userfunc||$allowedit)?'':'disabled="disabled"',
-        // filter active?
-        'tpl_filter_active' => ($active)?'checked="checked"':'',
-        // filter-types: array $types[$value]=>$text to fill dropdown-list
-        'tpl_filter_type' => $type,
-        // checkbox-trees: contains the whole HTML-output. Just use echo
-        'tpl_module_tree' => $mlist,
-        'tpl_pages_list1' => $plist1,
-        'tpl_save_url' => opf_quotes(ADMIN_URL."/admintools/tool.php?tool=".basename(dirname(__FILE__))),
-        'FTAN' => $ftan,
-        'tpl_id' => opf_quotes($id),
-        'tpl_filter_name' => opf_quotes($name),
-        'tpl_filter_funcname' => opf_quotes($funcname),
-        'tpl_filter_file' => opf_quotes($file),
-        'tpl_filter_description' => opf_quotes($desc),
-        'tpl_filter_helppath_onclick' => '', // opf_quotes(''),
-        'TPL_HELP_BLOCK' => '',
-        'tpl_funcname' => $funcname,
-        'tpl_func' => $func,
-        'tpl_cancel_onclick' => opf_quotes('javascript: window.location = \''.ADMIN_URL.'/admintools/tool.php?tool='.basename(dirname(__FILE__)).'\';'),
-        'tpl_allowedit' => (($func <> "")?("var opf_editarea = ".($allowedit?'"editable"':'""').";"):""),
-        'tpl_list_editarea' => "",
-        'tpl_list_growfield' => $list_growfield,
-        'tpl_filter_type_options' => $filter_type_options,
-        'WB_URL' => WB_URL,
-        'MOD_URL' => WB_URL.'/modules/'.$module_directory,
-        'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images',
-        'TPL_EXTRA_FIELDS_BLOCK' => ""
+    array(
+    // only inline-filters and filters with 'allowedit' are editable
+    'tpl_filter_readonly' => ($userfunc||$allowedit)?'':'readonly="readonly"',
+    'tpl_filter_disabled' => ($userfunc||$allowedit)?'':'disabled="disabled"',
+    // filter active?
+    'tpl_filter_active' => ($active)?'checked="checked"':'',
+    // filter-types: array $types[$value]=>$text to fill dropdown-list
+    'tpl_filter_type' => $type,
+    // checkbox-trees: contains the whole HTML-output. Just use echo
+    'tpl_module_tree' => $mlist,
+    'tpl_pages_list1' => $plist1,
+    'tpl_save_url' => opf_quotes(ADMIN_URL."/admintools/tool.php?tool=".basename(dirname(__FILE__))),
+    'FTAN' => $ftan,
+    'tpl_id' => opf_quotes($id),
+    'tpl_filter_name' => opf_quotes($name),
+    'tpl_filter_funcname' => opf_quotes($funcname),
+    'tpl_filter_file' => opf_quotes($file),
+    'tpl_filter_description' => opf_quotes($desc),
+    'tpl_filter_helppath_onclick' => '', // opf_quotes(''),
+    'TPL_HELP_BLOCK' => '',
+    'tpl_funcname' => $funcname,
+    'tpl_func' => $func,
+    'tpl_cancel_onclick' => opf_quotes('javascript: window.location = \''.ADMIN_URL.'/admintools/tool.php?tool='.basename(dirname(__FILE__)).'\';'),
+    'tpl_allowedit' => (($func <> "")?("var opf_editarea = ".($allowedit?'"editable"':'""').";"):""),
+    'tpl_list_editarea' => "",
+    'tpl_list_growfield' => $list_growfield,
+    'tpl_filter_type_options' => $filter_type_options,
+    'WB_URL' => WB_URL,
+    'MOD_URL' => WB_URL.'/modules/'.$module_directory,
+    'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images',
+    'TPL_EXTRA_FIELDS_BLOCK' => ""
 )));
 
 
-        // if file is not empty parse the file_area_block and store the result in TPL_FILE_AREA_BLOCK
-        if(!empty($file)){
-                $tpl->set_block('page', 'file_area_block', 'file_area');
-                $tpl->parse('TPL_FILE_AREA_BLOCK', 'file_area_block', false);
-        } else { 
-                $tpl->set_var('TPL_FILE_AREA_BLOCK', "");
-        }
+    // if file is not empty parse the file_area_block and store the result in TPL_FILE_AREA_BLOCK
+    if(!empty($file)){
+        $tpl->set_block('page', 'file_area_block', 'file_area');
+        $tpl->parse('TPL_FILE_AREA_BLOCK', 'file_area_block', false);
+    } else { 
+        $tpl->set_var('TPL_FILE_AREA_BLOCK', "");
+    }
 
-        // if func is not empty parse the func_area_block and store the result in TPL_FUNC_AREA_BLOCK
-        if(!empty($func)){
-                $tpl->set_block('page', 'func_area_block', 'func_area');
-                $tpl->parse('TPL_FUNC_AREA_BLOCK', 'func_area_block', false);
-        } else { 
-                $tpl->set_var('TPL_FUNC_AREA_BLOCK', "");
-        }
+    // if func is not empty parse the func_area_block and store the result in TPL_FUNC_AREA_BLOCK
+    if(!empty($func)){
+        $tpl->set_block('page', 'func_area_block', 'func_area');
+        $tpl->parse('TPL_FUNC_AREA_BLOCK', 'func_area_block', false);
+    } else { 
+        $tpl->set_var('TPL_FUNC_AREA_BLOCK', "");
+    }
 
 
 
