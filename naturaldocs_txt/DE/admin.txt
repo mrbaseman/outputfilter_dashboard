@@ -23,7 +23,9 @@ Topic: Admin-Tool &Uuml;bersicht
 
         *Typ:*
         
-        Der Typ des Filters. Weiter unten folgt eine Erkl&auml;rung zu den Filter-Typen.
+        Der Typ des Filters. Es gibt Inline-Filter, Plugin-Filter oder Modul-Filter.
+        Durch Klicken auf das Symbol k&ouml;nnen Sie zwischen Inline- und Plugin-Filtern umschalten.
+        Einige Meta-Informationen (z.B. Versionsnummer und Autor eines Plugin-Filters) gehen dabei verloren.
         
         *Beschreibung:*
         
@@ -105,7 +107,17 @@ Inline-Filter installieren:
                 Unterseiten der Seite "Description" anzuwenden.
 
         (see install_inline_trees_en.png)
-
+        
+        Ab OpF Version 1.5 und WBCE 1.2 ist es auch m&ouml;glich, Filter aufs Backend anzuwenden.
+        Wenn die WB-Version Backend-Filtering unterst&uuml;tzt, erscheinen die entsprechenden Backend-Module 
+        ebenfalls in der Baumansicht der Module.  
+        Wenn man in einem solchen Filter, der aufs Backend wirkt, einen Fehler hat, kann es sein, dass 
+        das Backend nicht mehr zug&auml;nglich ist. In diesem Fall kann das Backend-Filtering komplett deaktiviert
+        werden, indem die folgende Zeile zur globalen !config.php! von WBCE hinzugef&uuml;gt wird:
+        > define('WB_OPF_BE_OFF', 'off');
+        Der Wert ist dabei egal - sobald eine Konstante mit diesem Namen definiert ist, wird das Backend
+        nicht mehr gefiltert und Sie haben wieder Zugang, um den Filter zu korrigieren.
+        
         *Die Filter-Funktion:*
         
         Um die Filter-Funktion einzugeben benutzen Sie den Editor.

@@ -13,13 +13,13 @@ if (browserType) {document.write("<div class=" + browserType + ">");if (browserV
 
 <div id=Content><div class="CFile"><div class=CTopic id=MainTopic><h1 class=CTitle><a name="Modul-Filter_schreiben(de)"></a>Modul-Filter schreiben (de)</h1><div class=CBody><!--START_ND_SUMMARY--><div class=Summary><div class=STitle>Summary</div><div class=SBorder><table border=0 cellspacing=0 cellpadding=0 class=STable><tr class="SMain"><td class=SEntry><a href="#Modul-Filter_schreiben(de)" >Modul-Filter schreiben (de)</a></td><td class=SDescription></td></tr><tr class="SGeneric SMarked"><td class=SEntry><a href="#Einen_Filter_als_Teil_eines_Moduls_installieren" >Einen Filter als Teil eines Moduls installieren</a></td><td class=SDescription>Ist der Filter Teil eines normalen Modules, sind lediglich die Dateien install.php und uninstall.php des Modules entsprechend um Aufrufe von <a href="../functions_outputfilter-php.html#opf_register_filter" class=LFunction id=link1 onMouseOver="ShowTip(event, 'tt1', 'link1')" onMouseOut="HideTip('tt1')">opf_register_filter()</a> und <a href="../functions_outputfilter-php.html#opf_unregister_filter" class=LFunction id=link2 onMouseOver="ShowTip(event, 'tt2', 'link2')" onMouseOut="HideTip('tt2')">opf_unregister_filter()</a> zu erg&auml;nzen, und eine Datei mit der Filter-Funktion hinzuzuf&uuml;gen.</td></tr><tr class="SGeneric"><td class=SEntry><a href="#precheck.php" >precheck.php</a></td><td class=SDescription>&Uuml;berpr&uuml;fen Sie vor der installation, ob Outputfilter-Dashboard installiert ist. </td></tr></table></div></div><!--END_ND_SUMMARY--></div></div></div>
 
-<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="Einen_Filter_als_Teil_eines_Moduls_installieren"></a>Einen Filter als Teil eines Moduls installieren</h3><div class=CBody><p>Ist der Filter Teil eines normalen Modules, sind lediglich die Dateien install.php und uninstall.php des Modules entsprechend um Aufrufe von <a href="../functions_outputfilter-php.html#opf_register_filter" class=LFunction id=link3 onMouseOver="ShowTip(event, 'tt1', 'link3')" onMouseOut="HideTip('tt1')">opf_register_filter()</a> und <a href="../functions_outputfilter-php.html#opf_unregister_filter" class=LFunction id=link4 onMouseOver="ShowTip(event, 'tt2', 'link4')" onMouseOut="HideTip('tt2')">opf_unregister_filter()</a> zu erg&auml;nzen, und eine Datei mit der Filter-Funktion hinzuzuf&uuml;gen.</p><p>Zus&auml;tzlich k&ouml;nnen (und sollten) Sie WebsiteBakers Precheck-System benutzen, um zu pr&uuml;fen ob Outputfilter-Dashboard installiert ist.</p><h4 class=CHeading>install.php</h4><blockquote><pre class="prettyprint">&lt;?php
+<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="Einen_Filter_als_Teil_eines_Moduls_installieren"></a>Einen Filter als Teil eines Moduls installieren</h3><div class=CBody><p>Ist der Filter Teil eines normalen Modules, sind lediglich die Dateien install.php und uninstall.php des Modules entsprechend um Aufrufe von <a href="../functions_outputfilter-php.html#opf_register_filter" class=LFunction id=link3 onMouseOver="ShowTip(event, 'tt1', 'link3')" onMouseOut="HideTip('tt1')">opf_register_filter()</a> und <a href="../functions_outputfilter-php.html#opf_unregister_filter" class=LFunction id=link4 onMouseOver="ShowTip(event, 'tt2', 'link4')" onMouseOut="HideTip('tt2')">opf_unregister_filter()</a> zu erg&auml;nzen, und eine Datei mit der Filter-Funktion hinzuzuf&uuml;gen.</p><p>Zus&auml;tzlich k&ouml;nnen (und sollten) Sie WebsiteBakers Precheck-System benutzen, um zu pr&uuml;fen ob Outputfilter-Dashboard installiert ist.&nbsp; Das Installationsskript sollte auch nach der Installation ein weiteres Mal ausf&uuml;hrbar sein.&nbsp; Eventuell einzuf&uuml;gende Tabellen sollten daher auf ihre Existenz bepr&uuml;ft werden:</p><blockquote><pre class="prettyprint">CREATE TABLE ... IF NOT EXISTS</pre></blockquote><h4 class=CHeading>install.php</h4><blockquote><pre class="prettyprint">&lt;?php
 
 // normal content from install-file here
 // ...
 
-// check whether outputfilter-module is installed {
-if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php'))
+// check whether outputfilter-module is installed
+if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php')) {
   require_once(WB_PATH.'/modules/outputfilter_dashboard/functions.php');
   // install filter
   //---Searchengine-Highlighter-Filter-------------------------------------------
@@ -27,7 +27,7 @@ if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php'))
   opf_register_filter(array(
       'name' =&gt; 'Searchengine Highlighter',
       'type' =&gt; OPF_TYPE_PAGE_LAST,
-      'file' =&gt; '{SYSVAR:WB_PATH}/modules/mymodule/filter.php',
+      'file' =&gt; '{SYSVAR:WB_PATH}/modules/searchengine_highlight/filter.php',
       'funcname' =&gt; 'opff_searchengine_highlight',
       'desc' =&gt; &quot;Google-Search-Highlighter&quot;,
       'active' =&gt; 1,
@@ -36,7 +36,7 @@ if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php'))
 }
 
 // rest of install-file here
-// ...</pre></blockquote><h4 class=CHeading>uninstall.php</h4><blockquote><pre class="prettyprint">&lt;?php
+// ...</pre></blockquote><p>Standardm&auml;&szlig;ig werden neu installierte Filter ans Ende gestellt, aber Sie k&ouml;nnen die Position des Filters nachdem es registriert ist mit der Funktion <a href="../functions_outputfilter-php.html#opf_move_up_before" class=LFunction id=link5 onMouseOver="ShowTip(event, 'tt3', 'link5')" onMouseOut="HideTip('tt3')">opf_move_up_before</a> beeinflussen.</p><h4 class=CHeading>uninstall.php</h4><blockquote><pre class="prettyprint">&lt;?php
 
 // normal content from uninstall-file here
 // ...
@@ -49,16 +49,17 @@ if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php')) {
 }
 
 // rest of uninstall-file here
-// ...</pre></blockquote><h4 class=CHeading>filter.php</h4><p>Diese Datei enth&auml;lt die Filter-Funktion.&nbsp; See <a href="../functions_outputfilter-php.html#The_Filter-Function_itself" class=LGeneric id=link5 onMouseOver="ShowTip(event, 'tt3', 'link5')" onMouseOut="HideTip('tt3')">The Filter-Function itself</a>.</p><blockquote><pre class="prettyprint">&lt;?php
+// ...</pre></blockquote><h4 class=CHeading>filter.php</h4><p>Diese Datei enth&auml;lt die Filter-Funktion.&nbsp; See <a href="../functions_outputfilter-php.html#The_Filter-Function_itself" class=LGeneric id=link6 onMouseOver="ShowTip(event, 'tt4', 'link6')" onMouseOut="HideTip('tt4')">The Filter-Function itself</a>.</p><blockquote><pre class="prettyprint">&lt;?php
 if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
 
-function opff_cachecontrol(&amp;$content, $page_id, $section_id, $module, $wb) {
+function opff_searchengine_highlight(&amp;$content, $page_id, $section_id, $module, $wb) {
         // function code here
 
         return(TRUE);
 }</pre></blockquote></div></div></div>
 
-<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="precheck.php"></a>precheck.php</h3><div class=CBody><p>&Uuml;berpr&uuml;fen Sie vor der installation, ob Outputfilter-Dashboard installiert ist.&nbsp; F&uuml;gen Sie dazu Ihrem Modul eine Datei <span class="mypriv_var">precheck.php</span> mit dem folgenden Inhalt hinzu</p><blockquote><pre class="prettyprint">// prevent this file from being accessed directly
+<div class="CGeneric"><div class=CTopic><h3 class=CTitle><a name="precheck.php"></a>precheck.php</h3><div class=CBody><p>&Uuml;berpr&uuml;fen Sie vor der installation, ob Outputfilter-Dashboard installiert ist.&nbsp; F&uuml;gen Sie dazu Ihrem Modul eine Datei <span class="mypriv_var">precheck.php</span> mit dem folgenden Inhalt hinzu</p><blockquote><pre class="prettyprint">&lt;?php
+// prevent this file from being accessed directly
 if(!defined('WB_PATH')) die(header('Location: ../index.php'));
 
 $PRECHECK = array();
@@ -66,7 +67,17 @@ $PRECHECK['WB_VERSION'] = array('VERSION'=&gt;'2.8', 'OPERATOR'=&gt;'&gt;=');
 $PRECHECK['WB_ADDONS'] = array(
         // Outputfilter-Dashboard must be installed
         'outputfilter_dashboard'=&gt;array('VERSION'=&gt;'1.3.2', 'OPERATOR'=&gt;'&gt;=')
-);</pre></blockquote><p>Passen Sie die vorausgesetzte Version von Outputfilter-Dashboard wie ben&ouml;tigt an.</p></div></div></div>
+);</pre></blockquote><p>Passen Sie die vorausgesetzte Version von Outputfilter-Dashboard wie ben&ouml;tigt an.</p><p>Damit das Modul funktioniert, m&uuml;ssen Sie auch ein index.php und ein info.php file anlegen wie f&uuml;r jedes andere regul&auml;re Modul auch</p><h4 class=CHeading>index.php</h4><blockquote><pre class="prettyprint">&lt;?php
+header('Location: ../../index.php');</pre></blockquote><h4 class=CHeading>info.php</h4><blockquote><pre class="prettyprint">&lt;?php
+
+$module_directory       = 'searchengine_highlight';
+$module_name            = 'Search Engine Highlighter';
+$module_function        = 'filter';
+$module_version         = '0.1';
+$module_platform        = '2.8.3';
+$module_author          = 'your name';
+$module_license         = 'e.g. GPL v3';
+$module_description     = 'This module helps you to highlight search engine hits';</pre></blockquote></div></div></div>
 
 </div><!--Content-->
 
@@ -82,7 +93,7 @@ HideAllBut([5, 6, 4], 8);// --></script></div><!--Menu-->
 
 
 <!--START_ND_TOOLTIPS-->
-<div class=CToolTip id="tt1"><div class=CFunction><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td><table border=0 cellspacing=0 cellpadding=0><tr><td class="PBeforeParameters  prettyprint "nowrap>function opf_register_filter(</td><td class="PParameter  prettyprint " nowrap>$filter,</td><td class="PDefaultValuePrefix  prettyprint ">&nbsp;&nbsp;</td><td class="PDefaultValue  prettyprint " width=100<span class="mypriv_vartype">></td></tr><tr><td></td><td class="PParameter  prettyprint " nowrap>$serialized</td><td class="PDefaultValuePrefix  prettyprint ">&nbsp;=&nbsp;</td><td class="PDefaultValue  prettyprint " width=100</span>>FALSE</td><td class="PAfterParameters  prettyprint "nowrap>)</td></tr></table></td></tr></table></blockquote>Register a new Filter.</div></div><div class=CToolTip id="tt2"><div class=CFunction><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td><table border=0 cellspacing=0 cellpadding=0><tr><td class="PBeforeParameters  prettyprint "nowrap>function opf_unregister_filter(</td><td class="PParameter  prettyprint " nowrap>$name</td><td class="PAfterParameters  prettyprint "nowrap>)</td></tr></table></td></tr></table></blockquote>Un-Register a Filter.</div></div><div class=CToolTip id="tt3"><div class=CGeneric>The Filter function must have an unique name, and should have a &ldquo;opff_&rdquo;-prefix</div></div><!--END_ND_TOOLTIPS-->
+<div class=CToolTip id="tt1"><div class=CFunction><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td><table border=0 cellspacing=0 cellpadding=0><tr><td class="PBeforeParameters  prettyprint "nowrap>function opf_register_filter(</td><td class="PParameter  prettyprint " nowrap>$filter,</td><td class="PDefaultValuePrefix  prettyprint ">&nbsp;&nbsp;</td><td class="PDefaultValue  prettyprint " width=100%></td></tr><tr><td></td><td class="PParameter  prettyprint " nowrap>$serialized</td><td class="PDefaultValuePrefix  prettyprint ">&nbsp;=&nbsp;</td><td class="PDefaultValue  prettyprint " width=100%>FALSE</td><td class="PAfterParameters  prettyprint "nowrap>)</td></tr></table></td></tr></table></blockquote>Register a new Filter.</div></div><div class=CToolTip id="tt2"><div class=CFunction><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td><table border=0 cellspacing=0 cellpadding=0><tr><td class="PBeforeParameters  prettyprint "nowrap>function opf_unregister_filter(</td><td class="PParameter  prettyprint " nowrap>$name</td><td class="PAfterParameters  prettyprint "nowrap>)</td></tr></table></td></tr></table></blockquote>Un-Register a Filter.</div></div><div class=CToolTip id="tt3"><div class=CFunction><blockquote><table border=0 cellspacing=0 cellpadding=0 class="Prototype"><tr><td><table border=0 cellspacing=0 cellpadding=0><tr><td class="PBeforeParameters  prettyprint "nowrap>function opf_move_up_before(</td><td class="PParameter  prettyprint " nowrap>$name,</td></tr><tr><td></td><td class="PParameter  prettyprint " nowrap>$ref_name</td><td class="PAfterParameters  prettyprint "nowrap>)</td></tr></table></td></tr></table></blockquote>Upon registration move a filter up to a position before another one. </div></div><div class=CToolTip id="tt4"><div class=CGeneric>The Filter function must have an unique name, and should have a &ldquo;opff_&rdquo;-prefix</div></div><!--END_ND_TOOLTIPS-->
 
 
 

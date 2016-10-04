@@ -8,7 +8,7 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -121,7 +121,7 @@ function opf_db_query($q_str) {
   }
   if($ret)
     return($results);
-    else return(TRUE);  // success without returning results - probaly never reached
+    else return(TRUE);  // success without returning results (e.g. update) 
   
 }
 
@@ -178,6 +178,16 @@ function opf_db_run_query($q_str) {
   return(TRUE);  // success 
 }
 
+
+// returns the database status and the 
+function opf_db_get_error($asstring=TRUE){
+  global $database;
+  if($database->is_error()) { 
+    return( $database->get_error() );
+  }
+  if($asstring)return("");
+  return (FALSE);
+}
 
 /*
   Private Functions: some pre-defined filter-functions for use with <opf_fetch_clean()>
@@ -356,11 +366,10 @@ function opf_io_rmdir($dir) {
 }
 
 function opf_io_unlink($file) {
-  $res = TRUE;
   if(!file_exists($file))
     return(FALSE);
   if(is_file($file) || is_link($file))
-    return(unlink($dir));
+    return(unlink($file));
   // directory
   return(FALSE);
 }
@@ -761,6 +770,20 @@ function opf_move_down_one($name) {
     return(FALSE);
 }
 
+
+// returns the WHERE-query for the target-modules, depending if the backend is supported
+function opf_get_module_query(){
+    $return_value = " WHERE `function`='page' ";
+    if (class_exists("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+        $module_types = array( 'tool', 'setting', 'panel', 'backend' );
+        foreach ($module_types as $m) {
+            $return_value .= " OR `function`='$m' ";
+        }
+    }
+    return $return_value;
+}
+
+
 // get list of all installed page-modules useable as target (wysiwyg, news, ...)
 function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $m = array();
@@ -768,7 +791,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
        = opf_db_query( 
           "SELECT *"
           . " FROM  `".TABLE_PREFIX."addons`"
-          . " WHERE `function`='page'"
+          . opf_get_module_query()
           . " ORDER BY `name`"
         )
     ) return($m);
@@ -782,12 +805,16 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $m = opf_modules_categories('categories');
     $full_list = opf_modules_categories('modules');
     foreach($modules as $module) {
+        // backend-filtering is not supported when there is no class "Tool" 
+        if(($module['function'] != 'page') && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION')))) continue;  
         if(isset($full_list[$module['directory']])) {
             $type = $full_list[$module['directory']];
             if($type=='IGNORE') continue;
             $m[$type][] = $module;
+        } else {
+            if($module['function'] != 'page') $m['backend'][] = $module;
+                else $m['various'][] = $module;
         }
-        else $m['various'][] = $module;
     }
     return($m);
 }
@@ -887,6 +914,9 @@ function opf_modules_categories($type='modules') {
         $m['poll'] = array();
         $m['listing'] = array();
         $m['various'] = array();
+        if (class_exists ("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+            $m['backend'] = array();
+        }
         return($m);
     }
     // module --> category
@@ -984,6 +1014,9 @@ function opf_preload_filter_definitions() {
     global $opf_PAGECHILDS; // store all child--page-relations
     global $opf_PAGES; // global storage of page-data
     global $opf_MODULES; // global storage of modules
+    
+    if(isset($opf_FILTERS) && is_array($opf_FILTERS)) return(FALSE);    
+    
     $opf_FILTERS 
         = $opf_HEADER 
         = $opf_BODY 
@@ -1065,7 +1098,8 @@ function opf_apply_filters(&$content, $type, $module, $page_id, $section_id, $wb
         if(is_array($filter) && isset($filter['pages_parent'])) {
             if($filter['active'] && $filter['type']==$type
                 && ($module=='' || in_array($module, $filter['modules']) || in_array('all', $filter['modules']))
-                && ((in_array('all', $filter['pages']) || in_array($page_id, $filter['pages']))
+                && ( ($page_id == 'backend') 
+                 || (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages']))
                  || (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent']))
                 )) {
                 
@@ -1294,6 +1328,7 @@ global $LANG;
     $page_hierarchy = opf_list_page_hierarchy();
     $plist = '';
     if(in_array('0', $pages_parent)) $search_checked = 'checked="checked"'; else $search_checked = '';
+    if(in_array('backend', $pages_parent)) $backend_checked = 'checked="checked"'; else $backend_checked = '';
     if($type=='flat') {
         $plist = '<div class="checktreestylearea">';
         if(count($pages_parent)>0) {
@@ -1303,6 +1338,9 @@ global $LANG;
     } elseif($type=='tree') {
         $plist  = '<div class="checktreestylearea"><ul class="tree2 checktreestyle">';
         $plist .= '<li><input type="checkbox" name="searchresult" value="0" '.$search_checked.' /><label>'.$LANG['MOD_OPF']['TXT_SEARCH_RESULTS'].'</label></li>';
+        if (class_exists ("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+            $plist .= '<li><input type="checkbox" name="backend" value="backend" '.$backend_checked.' /><label>'.$LANG['MOD_OPF']['TXT_BACKEND'].'</label></li>';
+        }
         $plist .= '<li><input type="checkbox" name="pages_parent[]" value="all" /><label>'.$LANG['MOD_OPF']['TXT_ALL_PAGES'].'</label><ul>';
         $plist .= opf_build_tree_page_hierarchy($page_hierarchy, $pages_parent, $pages, 'pages_parent');
         $plist .= '</ul></li></ul></div>';
@@ -1343,11 +1381,15 @@ function opf_save() {
     $desc     = opf_fetch_post( 'desc', '', 'unchanged');
     $active   = opf_fetch_post( 'active', 0, 'int');
     $modules  = opf_fetch_post( 'modules', array(), 'unchanged');
-    //$pages    = opf_fetch_post( 'pages', array(), 'unchanged');
+    //$pages  = opf_fetch_post( 'pages', array(), 'unchanged');
     $pages_parent = opf_fetch_post( 'pages_parent', array(), 'unchanged');
     $searchres= opf_fetch_post( 'searchresult', FALSE, 'exists');
-    if($searchres!==FALSE) { 
+    $backend  = opf_fetch_post( 'backend', FALSE, 'exists');
+    if($searchres!==FALSE) {
         $pages_parent[] = '0';
+    }
+    if($backend!==FALSE) {
+        $pages_parent[] = 'backend';
     }
     // cleanup
     $desc = trim($desc);
@@ -1493,13 +1535,15 @@ function opf_save() {
 
 function opf_controller($arg, $opt=null, $module='', $page_id=0, $section_id=0) {
     global $wb;
-    
+    if(defined('PAGE_ID')&&($page_id==0))$page_id=PAGE_ID;
+
+    opf_preload_filter_definitions();
+
     switch($arg) {
     case('init'):
-        opf_preload_filter_definitions();
+        // moved this to above but keeping the option for explicit initialization
         break;
     case('page'):
-        if(defined('PAGE_ID')&&($page_id==0))$page_id=PAGE_ID;
         opf_apply_filters($opt, OPF_TYPE_PAGE, FALSE, $page_id, FALSE, $wb);
         opf_apply_filters($opt, OPF_TYPE_PAGE_LAST, FALSE, $page_id, FALSE, $wb);
         opf_insert_frontend_files($opt);
@@ -1510,8 +1554,19 @@ function opf_controller($arg, $opt=null, $module='', $page_id=0, $section_id=0) 
         opf_apply_filters($opt, OPF_TYPE_SECTION_LAST, $module, $page_id, $section_id, $wb);
         return($opt);
         break;
+    case('backend'):
+        if(!defined("WB_OPF_BE_OFF")){
+            if($module==""){
+                opf_apply_filters($opt, OPF_TYPE_PAGE, FALSE, 'backend', 0, $wb);
+                opf_apply_filters($opt, OPF_TYPE_PAGE_LAST, FALSE, 'backend', 0, $wb);
+            } else {
+                opf_apply_filters($opt, OPF_TYPE_SECTION, $module, 'backend', 0, $wb);
+                opf_apply_filters($opt, OPF_TYPE_SECTION_LAST, $module, 'backend', 0, $wb);
+            }
+        }
+        return($opt);
+        break;
     case('special'):
-        if(defined('PAGE_ID')&&($page_id==0))$page_id=PAGE_ID;
         foreach(opf_apply_get_modules($page_id) as $module) {
             opf_apply_filters($opt, OPF_TYPE_SECTION, $module['module'], $page_id, $module['section_id'], $wb);
             opf_apply_filters($opt, OPF_TYPE_SECTION_LAST, $module['module'], $page_id, $module['section_id'], $wb);
@@ -1547,7 +1602,7 @@ function opf_fetch_entry_language($descs) {
     return(reset($descs)); // return first element
 }
 
-
+// evaluate a variable from a file, e.g. the plugin_info.php
 function opf_plugin_info_read($file, $var=FALSE) {
     require($file);
     if(!$var)
@@ -1555,3 +1610,56 @@ function opf_plugin_info_read($file, $var=FALSE) {
     else
         return(isset($$var)?$$var:FALSE);
 }
+
+// a "serialize" function which produces human readable php code
+function opf_dump_var($var, $spacing=""){
+    $result = "";
+    if(is_string($var)) {
+        if(strpos($var, 'a:')===0){
+            $var=unserialize($var);
+        }
+    }
+    if(is_array($var)){
+        $result = "array (\n";
+        $numeric_keys=true;
+        foreach(array_keys($var) as $key){
+            if(!is_numeric($key)) 
+                $numeric_keys=false;
+        }
+        foreach($var as $key => $value){
+            if(!is_numeric($key)){
+                  $result .= "$spacing    \"$key\" => "
+                    . opf_dump_var($value,"$spacing    ")
+                    .",\n";
+            } else if($numeric_keys){
+                  $result .= "$spacing    $key => "
+                    . opf_dump_var($value,"$spacing    ")
+                    .",\n";
+            }
+        }
+        $result .= "$spacing)";
+    } else {
+        if(is_string($var)){
+            $result = "'".opf_escape_string($var)."'";
+        } else {
+            $result = "$var";
+        }
+    }
+    return $result;
+}
+
+// escapes single quotes in a string to be included in another single-quoted string
+function opf_escape_string($str){
+    return str_replace(array('\\',"'"), array('\\\\',"\'"), $str);
+}
+
+
+// create a directory name out of an arbitrary string
+function opf_create_dirname($str){
+    $s=strtolower(preg_replace(array('/\s\s*/','/[^a-zA-Z0-9_]/','/_*$/'), array('_','',''), $str));
+    if (strlen($s>63))
+       return substr(0,63,$s);
+    else
+       return $s;
+}
+

@@ -8,7 +8,7 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -69,7 +69,8 @@ if($doSave){
     global $MESSAGE;
     if ( method_exists( $admin, 'checkFTAN' ) ) { 
        if ( !$admin->checkFTAN()  ) {
-          if ((ob_get_contents()=="") && (!headers_sent())){
+          if ((ob_get_contents()=="") && (!headers_sent()) 
+              && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION'))) ){
              $admin->print_header();
           }
           $admin->print_error($MESSAGE['GENERIC_SECURITY_ACCESS'], $ToolUrl);
@@ -80,7 +81,8 @@ if($doSave){
 }
 $need_footer=FALSE;
 // depending on the WB version/fork the admin header is already printed/cached or not...
-if ((ob_get_contents()=="") && (!headers_sent())){
+if ((ob_get_contents()=="") && (!headers_sent()) 
+     && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION'))) ){ 
     $admin->print_header();
     $need_footer=TRUE;
 }
@@ -100,6 +102,7 @@ $id    = $admin->checkIDKEY('id', 0, 'GET');
 $dir       = opf_fetch_get( 'dir', NULL, 'string');
 $active    = opf_fetch_get( 'active', NULL, 'int');
 $delete    = opf_fetch_get( 'delete', FALSE, 'exists');
+$convert   = opf_fetch_get( 'convert', FALSE, 'exists');
 $css_save  = opf_fetch_get( 'css_save', FALSE, 'exists');
 $export    = opf_fetch_get( 'export', FALSE, 'exists');
 // fetch values from $_POST[]
@@ -119,6 +122,9 @@ if($export && $id ) {
     $res = include(dirname(__FILE__).'/export.php');
     if($res) $export_url = $res;
 }
+$export_success = ($export_ok==FALSE)?
+    $LANG['MOD_OPF']['TXT_EXPORT_FAILED']:
+    $LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'];
 
 // move up or down
 if($id && $dir=='up' ) {
@@ -135,6 +141,17 @@ if($id && $active!==NULL ){
 if($id && $delete ) {
     opf_unregister_filter($id);
 }
+$convert_message = ''; // will be set in convert.php
+$convert_ok = FALSE;
+// convert inline filter to plugin
+if($id && $convert ) {
+    $res = include(dirname(__FILE__).'/convert.php');
+    if(!$res) $export_message = $convert_message;
+    $export_success = ($export_ok==FALSE)?
+        $LANG['MOD_OPF']['TXT_CONVERT_FAILED']:
+        $LANG['MOD_OPF']['TXT_CONVERT_SUCCESS'];
+}
+
 // save filter
 if(($filtername || $funcname) && $doSave) {
     $tmp = opf_save();
@@ -180,6 +197,14 @@ if($add && $doSave ){ //================================================ add ===
 } else { //============================================== admin-tool ==
 
 
+    // Include the ordering class
+    require_once(WB_PATH.'/framework/class.order.php');
+    // Create new order object and reorder
+    $order = new order(TABLE_PREFIX.'mod_outputfilter_dashboard', 'position', 'id', 'type');
+    foreach(opf_get_types() as $type => $typename){ 
+        $order->clean($type);
+    }
+
     // check if the corefiles are patched
     $patch_applied = opf_check_patched();
     $lang = LANGUAGE;
@@ -214,6 +239,7 @@ if($add && $doSave ){ //================================================ add ===
         $filter_id=$filter['id'];
         if(method_exists($admin, 'getIDKEY')){
              $filter_id=$admin->getIDKEY($filter_id);
+             $filter['filter_id']=$filter_id;
         } 
         // line to separate filter-types
         if($old_type!=$filter['type']) {
@@ -255,9 +281,11 @@ if($add && $doSave ){ //================================================ add ===
         if($filter['userfunc']||$filter['plugin']) {
             $filter['delete_link'] = $ToolUrl."&amp;id=$filter_id&amp;delete=1";
             $filter['export_link'] = $ToolUrl."&amp;id=$filter_id&amp;export=1";
+            $filter['convert_link'] = $ToolUrl."&amp;id=$filter_id&amp;convert=1";
         } else {
             $filter['delete_link'] = '';
             $filter['export_link'] = '';
+            $filter['convert_link'] = '';
         }
         $filter['type'] = $types[$filter['type']];
         $filterlist[] = $filter;
@@ -287,9 +315,7 @@ if($add && $doSave ){ //================================================ add ===
         'tpl_upload_message_type' => ($upload_ok==FALSE)?'error':'success',
         'tpl_hide_upload' => ($upload_message=='' || $upload_ok==TRUE)?'class="hideupload"':'',
         'tpl_export_message' => opf_quotes($export_message),
-        'tpl_export_success' => ($export_ok==FALSE)?
-                        $LANG['MOD_OPF']['TXT_EXPORT_FAILED']:
-                        $LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'],
+        'tpl_export_success' => $export_success,
         'tpl_export_message_type' => ($export_ok==FALSE)?'error':'success',
         'tpl_export_button1' => ($export_ok==FALSE)?$LANG['MOD_OPF']['TXT_OK']:$LANG['MOD_OPF']['TXT_CANCEL'],
         'tpl_export_button2' => ($export_ok==FALSE)?'null':"'".$LANG['MOD_OPF']['TXT_DOWNLOAD']."'",
@@ -302,6 +328,7 @@ if($add && $doSave ){ //================================================ add ===
         'tpl_docu_patch_url' => WB_URL.$docu_patch_url,
         'WB_URL' => WB_URL,
         'MOD_URL' => WB_URL.'/modules/'.$module_directory,
+        'MODULE_DIR' => $module_directory,
         'IMAGE_URL' => WB_URL.'/modules/'.$module_directory.'/templates/images'
     )));
 
@@ -340,9 +367,11 @@ if($add && $doSave ){ //================================================ add ===
     foreach($filterlist as $filter){
         $row = ($row=='row_b'?'row_a':'row_b');
         $tpl->set_var(array(
+            'tpl_filter_id' => $filter['filter_id'],
             'tpl_filter_class' => ($filter['last_touched'])?"last-modified":opf_quotes($row),
             'tpl_filter_active' => ($filter['active'])?"active":"inactive",
             'tpl_filter_separator' => ($filter['sep_line'])?'class="row-separator"':'',
+            'tpl_filter_move' => ($filter['sep_line'])?'class="row-separator move"':'class="move"',
             'tpl_filter_activelink' => opf_quotes($filter['active_link']),
             'tpl_filter_active_inactive' => ($filter['active'])?"active":"inactive",
             'tpl_filter_on_off' => ($filter['active'])?"on":"off",
@@ -351,6 +380,26 @@ if($add && $doSave ){ //================================================ add ===
                                 $LANG['MOD_OPF']['TXT_FILTER_INACTIVE'],
             'tpl_filter_name' => opf_quotes($filter['name']),
             'tpl_filter_editlink' => opf_quotes($filter['edit_link']),
+            'tpl_convert_link_start' => ($filter['plugin']=='' && $filter['userfunc']==0)?"<!--/*":"",
+            'tpl_filter_convert_link' => opf_quotes($filter['convert_link']),
+            'tpl_filter_convert_query' => opf_quotes(
+                "opf_message('"
+                .(($filter['plugin']=='')
+                    ?$LANG['MOD_OPF']["TXT_CONVERT_FILTER"]
+                    :$LANG['MOD_OPF']["TXT_CONVERT_PLUGIN"])
+                ."', '"
+                .sprintf((($filter['plugin']=='')
+                    ?$LANG['MOD_OPF']['TXT_SURE_TO_CONVERT']
+                    :$LANG['MOD_OPF']['TXT_SURE_TO_INLINE']),$filter['name_js_quoted'])
+                ."', 'query', '"
+                .$LANG['MOD_OPF']["TXT_CANCEL"]
+                ."', '"
+                .$LANG['MOD_OPF']["TXT_OK"]
+                ."', '"
+                .opf_quotes($filter['convert_link'])
+                ."'); return false;"
+            ),
+            'tpl_convert_link_end' => ($filter['plugin']=='' && $filter['userfunc']==0)?"*/-->":"",
             'tpl_filter_type' => ($filter['plugin'])?
                             "plugin":(($filter['userfunc'])?
                                 "inline":"extension"),
@@ -414,5 +463,7 @@ if($add && $doSave ){ //================================================ add ===
     print opf_filter_Comments($tpl->parse('output', 'main', false));
 }
 
-$admin->print_footer();
-exit(0);
+if($need_footer){
+  $admin->print_footer();
+  exit(0);
+}

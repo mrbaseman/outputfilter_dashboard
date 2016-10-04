@@ -22,7 +22,9 @@ Topic: Admin-Tool Overview
 
         *Type:*
         
-        The type of the filter. See below.
+        The type of the filter. Possible types are Inline-Filter, Plugin-Filter, or Module-Filter.
+        By clicking on the symbol you can switch between Inline- and Plugin-Filter.
+        Some Meta-Data however is lost in this process (e.g. Version number and Author of a Plugin-Filter).
         
         *Description:*
         
@@ -101,6 +103,15 @@ Install Inline-Filters:
                 "Description".
 
         (see install_inline_trees_en.png)
+
+        Starting with  OpF Version 1.5 and WBCE 1.2 it is possible to apply filters to the backend.
+        If yur WB-Version supports backend filtering the appropriate backend modules will appear 
+        in the tree view of the modules.  
+        In case you have a mistake in such a filter which is applied to the backend, it might become 
+        completely unusable. In that case add the following line to your global !config.php! of WBCE
+        > define('WB_OPF_BE_OFF', 'off');
+        The value doesn't really matter, just if the constant is defined, there will no filter be 
+        applied to the backend and you have access to the dashboard again and you can fix the filters.
 
         *The Filter Function:*
         

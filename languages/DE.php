@@ -8,7 +8,7 @@ languages/DE.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -104,6 +104,10 @@ $LANG['MOD_OPF']['TXT_EXPORT_FAILED'] = 'Export fehlgeschlagen';
 
 $LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'] = 'Export erfolgreich';
 
+$LANG['MOD_OPF']['TXT_CONVERT_FAILED'] = 'Konvertierung fehlgeschlagen';
+
+$LANG['MOD_OPF']['TXT_CONVERT_SUCCESS'] = 'Konvertierung erfolgreich';
+
 $LANG['MOD_OPF']['TXT_OK'] = 'OK';
 
 $LANG['MOD_OPF']['TXT_DOWNLOAD'] = 'Download';
@@ -160,6 +164,14 @@ $LANG['MOD_OPF']['TXT_DELETE_FILTER'] = 'Filter l&ouml;schen';
 
 $LANG['MOD_OPF']['TXT_SURE_TO_DELETE'] = 'Wollen Sie den folgenden Filter wirklich l&ouml;schen<br /><b>%s</b>?';
 
+$LANG['MOD_OPF']['TXT_CONVERT_FILTER'] = 'Filter in Plugin konvertieren';
+
+$LANG['MOD_OPF']['TXT_SURE_TO_CONVERT'] = 'Wollen Sie den folgenden Filter wirklich in ein Plugin konvertieren<br /><b>%s</b>?';
+
+$LANG['MOD_OPF']['TXT_CONVERT_PLUGIN'] = 'In Inline-Filter konvertieren';
+
+$LANG['MOD_OPF']['TXT_SURE_TO_INLINE'] = 'Wollen Sie den folgendes Plugin wirklich in einen Inline Filter konvertieren<br /><b>%s</b>?';
+
 $LANG['MOD_OPF']['TXT_EXPORT_FILTER']  = 'Filter exportieren';
 
 $LANG['MOD_OPF']['TXT_VISIT_PROJECTS_WEBSITE'] = 'Besuchen Sie die Homepage des Projektes';
@@ -184,15 +196,21 @@ $LANG['MOD_OPF']['TXT_PAGE_HIERARCHY'] = 'Seitenhierarchie';
 
 $LANG['MOD_OPF']['TXT_SEARCH_RESULTS'] = 'Suchresultate';
 
+$LANG['MOD_OPF']['TXT_BACKEND'] = 'Backend';
+
 $LANG['MOD_OPF']['TXT_ALL_PAGES'] = 'Alle Seiten';
 
 $LANG['MOD_OPF']['TXT_EXPORT_FAILED_PLUGIN'] = 'Export fehlgeschlagen: %s';
+
+$LANG['MOD_OPF']['TXT_CONVERT_FAILED_PLUGIN'] = 'Konvertierung fehlgeschlagen: %s';
 
 $LANG['MOD_OPF']['TXT_WRITE_DENIED'] = 'Kann nicht ins Verzeichnis %s schreiben';
 
 $LANG['MOD_OPF']['TXT_NO_FILTER'] = 'Filter existiert nicht';
 
 $LANG['MOD_OPF']['TXT_NO_EXPORT'] = 'Ein Modul-Filter kann nicht exportiert werden';
+
+$LANG['MOD_OPF']['TXT_NO_CONVERT'] = 'Ein Modul-Filter kann nicht konvertiert werden';
 
 $LANG['MOD_OPF']['TXT_NO_SUCH_DIR'] = 'Verzeichnis existiert nicht';
 

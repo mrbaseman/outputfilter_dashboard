@@ -1,6 +1,24 @@
 
 Header: Version-History
 
+1.5:
+1.5.0 %(mrbaseman, 29 Sept 2016)%
+        - fetch $page_id from constant !PAGE_ID! for all cases
+        - automagically initialize the global filter list
+	- allow to sort filters via drag&drop
+	- make exported filter human-readable
+	- improve processing of formatting of documentation 
+	- when exporting a filter create a filter.php file
+	- during export also insert placeholders introduced in version 1.4.4
+	- allow to convert between inline filters and plugin filters
+	- added <opf_move_up_before> to move filters up in the list during installation
+	- search for pre-existing module filters during installation of opf
+	- cleaned up backend_body.js
+	- support backend filtering, provided that the class "Tool" exists and the settings have been converted to modules 
+	In case you have created a filter which screws up the backend completely, add the following line to your global !config.php! of your WBCE installation
+	> define('WB_OPF_BE_OFF', 'off');
+	The value doesn't really matter, just if the constant is defined, there will no filter be applied to the backend and you have access to the dashboard again and you can fix the filters.
+
 1.4:
 	*this version is a major re-engineering of the module with the goal to use it without PMF.*
 	Special thanks to all who have tested and especially to NorHei for fruitful discussions and for providing additional testing ressources.
@@ -17,7 +35,7 @@ Header: Version-History
 1.4.8 %(mrbaseman, 21 Feb 2016)%
 	- remove unused code part from add_filter to fix array conversion warnings
 	- update plugin filters to use new placeholders introduced in 1.4.4
-	> in order to pick up this change you have to remove the example filters before upgrading OpF
+	*in order to pick up this change you have to remove the example filters before upgrading OpF*
 	- update documentation: added a section which explains the use of the constants and placeholders 
 
 1.4.7 %(mrbaseman, 21 Feb 2016)%
@@ -47,8 +65,8 @@ Header: Version-History
         >        {OPF:PLUGIN_PATH} = will replace with WB_PATH.'/modules/outputfilter_dashboard/plugins/{your_plugin}'			
 			
         - added 2 CONSTANTS to work with OPF Plugins 
-        >        OPF_PLUGINS_PATH  
-        >        OPF_PLUGINS_URL
+        >        !OPF_PLUGINS_PATH!  
+        >        !OPF_PLUGINS_URL!
                         the path and url to the plugins folder is very long and is being used extensivly in Filters,
 			therefore the constants are a convenient addition.
                         The URL is 
@@ -61,7 +79,7 @@ Header: Version-History
         - correctly unregister from pmf
 
 1.4.2 %(mrbaseman, 29 Jan 2016)%
-        - add default value for opf_controller $opt 
+        - add default value for %$opt% in opf_controller 
 
 1.4.1 %(mrbaseman, 26 Jan 2016)%
 	- fix headers/ftan issue for latest WBCE versions

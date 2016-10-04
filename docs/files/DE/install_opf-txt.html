@@ -50,7 +50,7 @@ $output = ob_get_contents();
 if(ob_get_length() &gt; 0) { ob_end_clean(); }
 
 // apply outputfilter
-if(function_exists('opf_apply_filters')) {
+if(function_exists('opf_controller')) {
    $output = opf_controller('page', $output);
 }
 
@@ -66,7 +66,7 @@ if(function_exists('opf_apply_filters')) {
 }</pre></blockquote><h4 class=CHeading>und <b>passen Sie diesen Zeilen wie folgt an</b> (f&uuml;gen Sie den mittleren Teil ein)</h4><blockquote><pre class="prettyprint">    ob_start(); // fetch original content
     require(WB_PATH.'/modules/'.$module.'/view.php');
     $content = ob_get_clean();
-    if(function_exists('opf_apply_filters')) {
+    if(function_exists('opf_controller')) {
       $content = opf_controller('section', $content, $module, $page_id, $section_id);
    }
 } else {
@@ -80,7 +80,7 @@ if(function_exists('opf_apply_filters')) {
             $content = ob_get_contents();
             ob_end_clean();
             // Apply Filters
-            if(function_exists('opf_apply_filters')) {
+            if(function_exists('opf_controller')) {
                 $content = opf_controller('special', $content);
             }
             // Print Content

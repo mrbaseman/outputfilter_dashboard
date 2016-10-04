@@ -7,7 +7,10 @@ des Modules entsprechend um Aufrufe von <opf_register_filter()> und <opf_unregis
 und eine Datei mit der Filter-Funktion hinzuzuf&uuml;gen.
 
 Zus&auml;tzlich k&ouml;nnen (und sollten) Sie WebsiteBakers Precheck-System benutzen,
-um zu pr&uuml;fen ob Outputfilter-Dashboard installiert ist.
+um zu pr&uuml;fen ob Outputfilter-Dashboard installiert ist. 
+Das Installationsskript sollte auch nach der Installation ein weiteres Mal ausf&uuml;hrbar sein. 
+Eventuell einzuf&uuml;gende Tabellen sollten daher auf ihre Existenz bepr&uuml;ft werden:
+        > CREATE TABLE ... IF NOT EXISTS
 
 
 install.php:
@@ -16,8 +19,8 @@ install.php:
         >// normal content from install-file here
         >// ...
         >
-        >// check whether outputfilter-module is installed {
-        >if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php'))
+        >// check whether outputfilter-module is installed 
+        >if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/functions.php')) {
         >  require_once(WB_PATH.'/modules/outputfilter_dashboard/functions.php');
         >  // install filter
         >  //---Searchengine-Highlighter-Filter-------------------------------------------
@@ -25,7 +28,7 @@ install.php:
         >  opf_register_filter(array(
         >      'name' => 'Searchengine Highlighter',
         >      'type' => OPF_TYPE_PAGE_LAST,
-        >      'file' => '{SYSVAR:WB_PATH}/modules/mymodule/filter.php',
+        >      'file' => '{SYSVAR:WB_PATH}/modules/searchengine_highlight/filter.php',
         >      'funcname' => 'opff_searchengine_highlight',
         >      'desc' => "Google-Search-Highlighter",
         >      'active' => 1,
@@ -36,6 +39,8 @@ install.php:
         >// rest of install-file here
         >// ...
         >
+
+        Standardm&auml;&szlig;ig werden neu installierte Filter ans Ende gestellt, aber Sie k&ouml;nnen die Position des Filters nachdem es registriert ist mit der Funktion <opf_move_up_before> beeinflussen.
 
 uninstall.php:
         ><?php
@@ -60,7 +65,7 @@ filter.php:
         ><?php
         >if(!defined('WB_PATH')) die(header('Location: ../../index.php'));
         >
-        >function opff_cachecontrol(&$content, $page_id, $section_id, $module, $wb) {
+        >function opff_searchengine_highlight(&$content, $page_id, $section_id, $module, $wb) {
         >        // function code here
         >
         >        return(TRUE);
@@ -70,6 +75,7 @@ filter.php:
 Topic: precheck.php
         &Uuml;berpr&uuml;fen Sie vor der installation, ob Outputfilter-Dashboard installiert ist.
         F&uuml;gen Sie dazu Ihrem Modul eine Datei !precheck.php! mit dem folgenden Inhalt hinzu
+        ><?php
         >// prevent this file from being accessed directly
         >if(!defined('WB_PATH')) die(header('Location: ../index.php'));
         >
@@ -82,3 +88,23 @@ Topic: precheck.php
 
         Passen Sie die vorausgesetzte Version von Outputfilter-Dashboard wie ben&ouml;tigt an.
 
+        
+        Damit das Modul funktioniert, m&uuml;ssen Sie auch ein index.php und ein info.php file
+        anlegen wie f&uuml;r jedes andere regul&auml;re Modul auch
+
+index.php:
+        ><?php
+        >header('Location: ../../index.php');
+
+info.php:
+        ><?php
+        >
+        >$module_directory       = 'searchengine_highlight';
+        >$module_name            = 'Search Engine Highlighter';
+        >$module_function        = 'filter';
+        >$module_version         = '0.1';
+        >$module_platform        = '2.8.3';
+        >$module_author          = 'your name';
+        >$module_license         = 'e.g. GPL v3';
+        >$module_description     = 'This module helps you to highlight search engine hits';
+        

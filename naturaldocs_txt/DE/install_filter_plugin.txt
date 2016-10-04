@@ -48,6 +48,8 @@ plugin_install.php:
         >        'allowedittarget' => 1
         >));
 
+        Standardm&auml;&szlig;ig werden neu installierte Filter ans Ende gestellt, aber Sie k&ouml;nnen die Position des Filters nachdem es registriert ist mit der Funktion <opf_move_up_before> beeinflussen.
+
         
 filter.php:
         Diese Datei enth&auml;lt die Filter-Funktion.

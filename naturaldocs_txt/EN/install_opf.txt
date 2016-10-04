@@ -79,7 +79,7 @@ Topic: wb/index.php
                 >if(ob_get_length() > 0) { ob_end_clean(); }
                 >
                 >// apply outputfilter
-                >if(function_exists('opf_apply_filters')) {
+                >if(function_exists('opf_controller')) {
                 >   $output = opf_controller('page', $output);
                 >} 
                 >
@@ -104,7 +104,7 @@ Topic: wb/framework/frontend.functions.php
                 >     ob_start(); // fetch original content
                 >     require(WB_PATH.'/modules/'.$module.'/view.php');
                 >     $content = ob_get_clean();
-                >     if(function_exists('opf_apply_filters')) {
+                >     if(function_exists('opf_controller')) {
                 >       $content = opf_controller('section', $content, $module, $page_id, $section_id);
                 >    }
                 > } else {
@@ -126,7 +126,7 @@ Topic: wb/framework/frontend.functions.php
                 >              $content = ob_get_contents();
                 >              ob_end_clean();
                 >              // Apply Filters
-                >              if(function_exists('opf_apply_filters')) {
+                >              if(function_exists('opf_controller')) {
                 >                  $content = opf_controller('special', $content);
                 >              }
                 >              // Print Content

@@ -8,7 +8,7 @@ functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -543,7 +543,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
     }
 
     $fileCheck = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $file);
-    $fileCheck = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$filter['plugin'], $fileCheck);
+    $fileCheck = str_replace('{OPF:PLUGIN_PATH}', OPF_PLUGINS_PATH.$plugin, $fileCheck);
     
     if(($fileCheck=='' && $func=='') || (($fileCheck!='' && $func!=''))) {
         trigger_error('File OR Function needed', E_USER_WARNING);
@@ -642,6 +642,50 @@ function opf_register_filter($filter, $serialized=FALSE) {
                                             $configurl,$csspath,$helppath,$additional_values,$additional_fields,
                                             $additional_fields_languages);
     return($res);
+}
+
+
+/*
+    Function: opf_move_up_before
+        Upon registration move a filter up to a position before another one.
+        This function can be used after <opf_register_filter()> to adjust its position 
+        in the filter list. By default, freshly installed filters are appended to the
+        end of the list of filters of the same type. Use this function inside the 
+        <install.php> to move the filter up to a target position denoted by the 
+        name of another filter. You can repeat this with different names of filters
+        from which you know that they have to be applied after the one you are installing.
+
+    Prototype:
+        %bool% opf_move_up_before( %string% $name, %string% $ref_name )
+
+    Parameters:
+        $name - %(string)% the name of the filter to move up in the list
+        $ref_name - %(string)% name of the filter at the target position
+
+    Returns:
+        !TRUE! on success, !FALSE! if the types don't match or the filters were not found
+
+    Example:
+        > opf_move_up_before('opf CSS to head', 'Searchengine Highlighter');
+*/
+
+function opf_move_up_before($name, $ref_name){
+    $name = opf_check_name($name);
+    if(!$name) return(FALSE);
+    $pos = opf_get_position($name);
+    $type = opf_get_type($name);
+    if($pos!==FALSE && $type!==FALSE && $pos>0) {
+        $ref_name = opf_check_name($ref_name);
+        if(!$ref_name) return(FALSE);
+        $ref_pos = opf_get_position($ref_name);
+        $ref_type = opf_get_type($ref_name);
+        while($ref_pos!==FALSE && $pos!==FALSE && $ref_type==$type && $ref_pos>0 && $pos>$ref_pos) {
+            if(opf_move_up_one($name)===FALSE) 
+                return(FALSE);
+            $pos = opf_get_position($name);
+        }
+     }
+     return(TRUE);
 }
 
 

@@ -48,6 +48,8 @@ plugin_install.php:
         >        'allowedittarget' => 1
         >));
 
+        By default during installation filters are appended to the end of the list, but you can influence the position later on using the function <opf_move_up_before>.
+
 filter.php:
         This file contains the filter-function itself.
         See <The Filter-Function itself>.

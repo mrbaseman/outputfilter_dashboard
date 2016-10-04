@@ -8,7 +8,7 @@ languages/FR.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -105,6 +105,10 @@ $LANG['MOD_OPF']['TXT_EXPORT_FAILED'] = 'Echec de l&apos;export';
 
 $LANG['MOD_OPF']['TXT_EXPORT_SUCCESS'] = 'Exporter avec succe&egrave;s';
 
+$LANG['MOD_OPF']['TXT_CONVERT_FAILED'] = 'Echec de la transformation';
+
+$LANG['MOD_OPF']['TXT_CONVERT_SUCCESS'] = 'Transformation avec succe&egrave;s';
+
 $LANG['MOD_OPF']['TXT_OK'] = 'OK';
 
 $LANG['MOD_OPF']['TXT_DOWNLOAD'] = 'T&eacute;l&eacute;charger';
@@ -161,6 +165,19 @@ $LANG['MOD_OPF']['TXT_DELETE_FILTER'] = 'Supprimer filtre';
 
 $LANG['MOD_OPF']['TXT_SURE_TO_DELETE'] = '&Ecirc;tes-vous s&ucirc;r de vouloir supprimer le filtre <br /> <b> %s </ b>?';
 
+$LANG['MOD_OPF']['TXT_CONVERT_FILTER'] = 'transformer filtre en plugin';
+
+$LANG['MOD_OPF']['TXT_SURE_TO_CONVERT'] = '&Ecirc;tes-vous s&ucirc;r de vouloir transformer le filtre <br /><b>%s</b><br />en plugin?';
+
+$LANG['MOD_OPF']['TXT_CONVERT_PLUGIN'] = 'transformer plugin en filtre inline';
+'Convert filter to inline';
+
+$LANG['MOD_OPF']['TXT_SURE_TO_INLINE'] = '&Ecirc;tes-vous s&ucirc;r de vouloir transformer le plugin <br /><b>%s</b><br />en inline filtre?';
+
+$LANG['MOD_OPF']['TXT_CONVERT_FILTER'] = 'transformer en plugin';
+
+$LANG['MOD_OPF']['TXT_SURE_TO_CONVERT'] = '&Ecirc;tes-vous s&ucirc;r de vouloir transformer le filtre <br /><b>%s</b>?';
+
 $LANG['MOD_OPF']['TXT_EXPORT_FILTER'] = 'Export du filtre';
 
 $LANG['MOD_OPF']['TXT_VISIT_PROJECTS_WEBSITE'] = 'Visiter projets site';
@@ -185,15 +202,21 @@ $LANG['MOD_OPF']['TXT_PAGE_HIERARCHY'] = 'hi&eacute;rarchie des pages';
 
 $LANG['MOD_OPF']['TXT_SEARCH_RESULTS'] = 'R&eacute;sultats de la r&eacute;cherche';
 
+$LANG['MOD_OPF']['TXT_BACKEND'] = 'Backend';
+
 $LANG['MOD_OPF']['TXT_ALL_PAGES'] = 'Toutes les pages';
 
 $LANG['MOD_OPF']['TXT_EXPORT_FAILED_PLUGIN'] = '&Eacute;chec de l&apos;exportation plugin: %s';
+
+$LANG['MOD_OPF']['TXT_CONVERT_FAILED_PLUGIN'] = '&Eacute;chec de la transformation plugin: %s';
 
 $LANG['MOD_OPF']['TXT_WRITE_DENIED'] = 'ne peut pas &eacute;crire dans le r&eacute;pertoire %s';
 
 $LANG['MOD_OPF']['TXT_NO_FILTER'] = 'Filtre n&apos;existe pas';
 
 $LANG['MOD_OPF']['TXT_NO_EXPORT'] = 'On ne peut pas exporter un module de filtre';
+
+$LANG['MOD_OPF']['TXT_NO_CONVERT'] = 'On ne peut pas transformer un module de filtre';
 
 $LANG['MOD_OPF']['TXT_NO_SUCH_DIR'] = 'r&eacute;pertoire n&apos;existe pas';
 

@@ -6,7 +6,7 @@ templates/tool.htt
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -102,26 +102,29 @@ templates/tool.htt
     <p id="close-panel"><img class="link" src="{IMAGE_URL}/close.png" alt="[x]" title="close panel" /></p>
 </div>
 
-
 <!--/*  List of filters  */-->
 <form name="outputfilter" id="outputfilter" method="post">
 <input type="hidden" name="save_settings" value="save_settings">
 {FTAN}
-<table id="dashboard" class="filters-table" cellpadding="3px" cellspacing="0" border="0" width="100%">
+<table id="dashboard" class="dragdrop_form filters-table" cellpadding="3px" cellspacing="0" border="0" width="100%">
     <thead>
         <tr>
+            <td style="width:2%">&nbsp;</td>
             <td style="width:3%">&nbsp;</td>
             <td style="width:25%;padding-left:24px;">{TXT_FILTER_NAME}</td>
-            <td style="width:20px">&nbsp;</td>
+            <td style="width:3%">&nbsp;</td>
             <td style="width:15%">{TXT_TYPE}</td>
-            <td style="width:48%">{TXT_DESCRIPTION}</td>
+            <td style="width:30%">{TXT_DESCRIPTION}</td>
             <td colspan="7" style="width:20%">{TXT_ACTIONS}</td>
+            <td style="width:2%">&nbsp;</td>
         </tr>
     </thead>
+    <tbody>
     {TPL_FILTER_BLOCK}
+    </tbody>
     <tfoot>
         <tr>
-            <td colspan="12"></td>
+            <td colspan="14"></td>
         </tr>        
     </tfoot>
 </table>
@@ -150,6 +153,15 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License</a> for more details.</small></p>
 <br />
 </div>
+<script type="text/javascript"> 
+    /* <![CDATA[ */
+        var WB_URL = '{WB_URL}';
+        var LOAD_DRAGDROP = true;
+        var ICONS = '{WB_URL}/modules/outputfilter_dashboard/dialog/images';
+        var LOAD_CLUETIP = true;
+    /* ]]> */
+</script>
+
 <!-- END main_block -->
 
 
@@ -197,7 +209,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
 
 
 <!-- BEGIN filter_block -->
-<tr class="{tpl_filter_class} {tpl_filter_active}">
+<tr class="{tpl_filter_class} {tpl_filter_active}" id="id_{tpl_filter_id}">
+    <td class="dragdrop_item">&nbsp;</td>
     <td {tpl_filter_separator}>
         <a href="{tpl_filter_activelink}"><img src="{IMAGE_URL}/{tpl_filter_active_inactive}.png" alt="[{tpl_filter_on_off}]" title="{tpl_filter_activelink_title}" border="0" /></a>
     </td>
@@ -205,7 +218,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
         <a href="{tpl_filter_editlink}" title="{TXT_EDIT_FILTER}"><nobr><img src="{IMAGE_URL}/opf.png" alt="" border="0" /> {tpl_filter_name}</nobr></a>
     </td>
     <td {tpl_filter_separator}><small>
-            <img class="info" src="{IMAGE_URL}/{tpl_filter_type}.png" title="{tpl_filter_title}" border="0" alt="{tpl_filter_type}"/></small></td>
+        {tpl_convert_link_start}
+        <a href="{tpl_filter_convert_link}" onclick="{tpl_filter_convert_query}" title="{TXT_CONVERT_FILTER}">
+        {tpl_convert_link_end}
+        <img src="{IMAGE_URL}/{tpl_filter_type}.png" title="{tpl_filter_title}" border="0" alt="{tpl_filter_type}"/>
+        {tpl_convert_link_start}</a>{tpl_convert_link_end}
+        </small>
+    </td>
 
     <td  {tpl_filter_separator}>
         <nobr>&nbsp;{tpl_filter_type_txt}</nobr>
@@ -226,13 +245,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
         <a href="{tpl_filter_css_link}" title="{TXT_EDITCSS}"><img src="{IMAGE_URL}/css_script.gif" alt="[css]" border="0" /></a>
         {tpl_filter_css_link_end}
     </td>        
-    <td {tpl_filter_separator}>
+    <td {tpl_filter_move}>
         {tpl_filter_moveup_link_start}
         
         <a href="{tpl_filter_moveup_link}" title="{TXT_MOVE_UP}"><img src="{IMAGE_URL}/up_16.png" border="0" alt="/\" /></a>
         {tpl_filter_moveup_link_end}
     </td>
-    <td {tpl_filter_separator}>
+    <td {tpl_filter_move}>
         {tpl_filter_movedown_link_start}
         <a href="{tpl_filter_movedown_link}" title="{TXT_MOVE_DOWN}"><img src="{IMAGE_URL}/down_16.png" border="0" alt="\/" /></a>
         {tpl_filter_movedown_link_end}
@@ -249,5 +268,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://ww
         <img src="{IMAGE_URL}/export_16.png" border="0" alt="=>>" /></a>
         {tpl_filter_export_link_end}
     </td>
+    <td class="dragdrop_item">&nbsp;</td>
 </tr>
 <!-- END filter_block -->

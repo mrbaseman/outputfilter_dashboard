@@ -6,7 +6,7 @@ backend.css
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.4.9
+ * @version         1.5.0
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
@@ -52,13 +52,13 @@ backend.css
 }
 table.filters-table { 
     border: solid 1px #515d76; 
-    margin-bottom: 8px 
+    margin-bottom: 8px ;
+    background-color: #e0fbcf; 
 }
 .filters-table th, b { 
    color: #515d76; 
    font-weight: bold; 
-   background-repeat: 
-   repeat-x; 
+   background-repeat: repeat-x; 
    background-attachment: scroll; 
    background-position: 0 0; 
    text-align: right; 
@@ -80,13 +80,19 @@ table.filters-table {
 .row_a th,
 .row_a { 
     background: #fafafb url(templates/images/box_bg.png) repeat-x 0 -2px; 
-    border-bottom: 1px solid #becadb 
+    border-bottom: 1px solid #becadb ;
 }
 .row_b td,
 .row_b th { 
     background: #fafafb url(templates/images/box_bg.png) repeat-x 0 12px; 
-    border-bottom: 1px solid #becadb 
+    border-bottom: 1px solid #becadb ;
 }
+
+.filters-table .row_a td,
+.filters-table .row_b td,
+.filters-table .last-modified td {
+    line-height: 36px;
+}.
 
 /*    
 ------------------| dashboard-rows
@@ -297,3 +303,29 @@ ul.checktreestyle li .half_checked {
 .activity-checked .activity-disabled img{
    background-position: 0px -48px;
 }
+/*
+----------------------------------| drag&drop
+*/
+.dragdrop_handle { 
+    cursor: move; 
+    padding: 0; 
+    width: 20px !important; 
+    border-style: solid; 
+    border-width: 2px 2px 3px; 
+    border-color: #cad2d9 #bac5ce 
+}
+
+.jsadmin_drag {
+    cursor: move;
+}
+
+.jsadmin_drag a, 
+.jsadmin_drag input, 
+.jsadmin_drag select {
+    cursor: pointer;
+}
+
+ul.jsadmin_drag_area {
+    border: solid 1px #99f;
+}
+
