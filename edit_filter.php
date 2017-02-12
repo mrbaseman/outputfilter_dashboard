@@ -8,12 +8,12 @@ edit_filter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -68,6 +68,8 @@ if(!$filters = opf_db_query( "SELECT * FROM `".TABLE_PREFIX."mod_outputfilter_da
 $filter = $filters[0];
 $types = opf_get_types();
 $name = $filter['name'];
+// update active/inactive state from Settings
+$filter['active']=opf_is_active($filter['name']);
 $active = ($filter['active']==1?1:0);
 $userfunc = ($filter['userfunc']==1?1:0);
 $plugin = $filter['plugin'];

@@ -8,12 +8,12 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -496,6 +496,9 @@ function opf_check_patched(){
     // WBCE calls opf_controller directly, wb 2.8.3 sp6 uses the OutputFilterApi 
     $patch_applied=FALSE;
     if($content = file_get_contents(WB_PATH.'/framework/frontend.functions.php')) {
+        if(file_exists(WB_PATH.'/framework/functions/frontend.functions.php')) {
+          $content = file_get_contents(WB_PATH.'/framework/functions/frontend.functions.php');
+        }
         if(preg_match('/opf_controller[^;]*section/', $content) ||
            // detect a bug in a release candidate for sp6:
            preg_match('/OpF\?arg=section\&module/', $content)) {
@@ -505,12 +508,15 @@ function opf_check_patched(){
                     if(preg_match('/opf_controller[^;]*page/', $content)) {
                        $patch_applied = TRUE;
                     }
-                    if($content 
-                       = file_get_contents(WB_PATH.'/modules/output_filter/index.php')) {
-                        // sp4 and sp5 started to use OutputFilterApi 
-                        // but it was broken at that time
-                        if(preg_match('/OpF/', $content)) {
-                           $patch_applied = TRUE;
+                    if(!file_exists(WB_PATH.'/modules/output_filter/index.php')){
+                       $patch_applied = TRUE;
+                    } else { 
+                        if ( $content = file_get_contents(WB_PATH.'/modules/output_filter/index.php')) {
+                            // sp4 and sp5 started to use OutputFilterApi 
+                            // but it was broken at that time
+                            if(preg_match('/OpF/', $content)) {
+                                $patch_applied = TRUE;
+                            }
                         }
                     }            
                 }
@@ -620,10 +626,10 @@ function opf_get_position_min($type) {
 
 
 // get position
-function opf_get_position($name) {
+function opf_get_position($name, $verbose=TRUE) {
     $name = opf_check_name($name);
     if(!$name) return(FALSE);
-    if(opf_is_registered($name, TRUE)) {
+    if(opf_is_registered($name, $verbose)) {
         return(
            opf_db_query_vars( 
               "SELECT `position`"
@@ -636,10 +642,10 @@ function opf_get_position($name) {
 }
 
 // get type
-function opf_get_type($name) {
+function opf_get_type($name,$verbose=TRUE) {
     $name = opf_check_name($name);
     if(!$name) return(FALSE);
-    if(opf_is_registered($name, TRUE)) {
+    if(opf_is_registered($name, $verbose)) {
         return(
            opf_db_query_vars( 
               "SELECT `type`"
@@ -664,7 +670,7 @@ function opf_is_registered($name, $verbose=FALSE) {
     ) return(TRUE);
     else {
         if($verbose)
-            trigger_error('opf_is_registered(): Filter not registred', E_USER_WARNING);
+            trigger_error('opf_is_registered(): Filter not registred: '.$name, E_USER_WARNING);
     }
     return(FALSE);
 }
@@ -680,8 +686,32 @@ function opf_is_active($name) {
               . " FROM `".TABLE_PREFIX."mod_outputfilter_dashboard`"
               . " WHERE `name`='%s'", $name
            )
-        ) return(TRUE);
+        ) {
+            if(class_exists('Settings') && defined('WBCE_VERSION')){
+                // in WBCE check for settings state as well, if enabled there return true 
+                if(Settings::Get( opf_filter_name_to_setting($name), TRUE))
+                    return TRUE;
+                // if disabled but a backend version of this filter exists and it is on:  
+                if(Settings::Get( opf_filter_name_to_setting($name).'_be', FALSE)){
+                    $filter_settings=opf_filter_get_data($name);
+                    // check if backend is also enabled inside of the filter 
+                    if($filter_settings){
+                        if(in_array('backend', $filter_settings['pages_parent']))
+                            return(TRUE);
+                    }
+                    // if backend is not on inside the filter
+                    return(FALSE);
+                } 
+                // if both, backend, and frontend are off via Settings class
+                return(FALSE);
+            }
+            // other platforms, e.g. wb classic or older WBCE
+            return(TRUE);
+        }
+        // db-Query returns that it is off
+        return(FALSE);
     }
+    // filter is not registered in the dashboard
     return(FALSE);
 }
 
@@ -693,7 +723,15 @@ function opf_set_active($name, $active=1) {
         trigger_error('opf_set_active(): Wrong status', E_USER_WARNING);
         return(FALSE);
     }
+    opf_preload_filter_definitions(); 
     if(opf_is_registered($name, TRUE)) {
+        if(class_exists('Settings') && defined('WBCE_VERSION')){
+            Settings::Set( opf_filter_name_to_setting($name), $active);
+            $filter_settings=opf_filter_get_data($name);
+            if($filter_settings)
+                Settings::Set( opf_filter_name_to_setting($name).'_be', $active && 
+                    in_array('backend', $filter_settings['pages_parent']));
+        }
         return(
            opf_db_run_query( 
                "UPDATE `".TABLE_PREFIX."mod_outputfilter_dashboard`"
@@ -742,11 +780,11 @@ function opf_switch_position($type, $pos1, $pos2) {
 }
 
 // move up position by one
-function opf_move_up_one($name) {
+function opf_move_up_one($name,$verbose=TRUE) {
     $name = opf_check_name($name);
     if(!$name) return(FALSE);
-    $pos = opf_get_position($name);
-    $type = opf_get_type($name);
+    $pos = opf_get_position($name,$verbose);
+    $type = opf_get_type($name,$verbose);
     if($pos!==FALSE && $type!==FALSE && $pos>0) {
         $pos_new = $pos-1;
         return(opf_switch_position($type, $pos, $pos_new));
@@ -755,11 +793,11 @@ function opf_move_up_one($name) {
 }
 
 // move down position by one
-function opf_move_down_one($name) {
+function opf_move_down_one($name,$verbose=TRUE) {
     $name = opf_check_name($name);
     if(!$name) return(FALSE);
-    $pos = opf_get_position($name);
-    $type = opf_get_type($name);
+    $pos = opf_get_position($name,$verbose);
+    $type = opf_get_type($name,$verbose);
     if($pos!==FALSE && $type!==FALSE) {
         $max = opf_get_position_max($type);
         if($max && $pos<$max) {
@@ -774,7 +812,7 @@ function opf_move_down_one($name) {
 // returns the WHERE-query for the target-modules, depending if the backend is supported
 function opf_get_module_query(){
     $return_value = " WHERE `function`='page' ";
-    if (class_exists("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+    if (class_exists("Tool") && defined('WBCE_VERSION')){ // backend-filtering supported 
         $module_types = array( 'tool', 'setting', 'panel', 'backend' );
         foreach ($module_types as $m) {
             $return_value .= " OR `function`='$m' ";
@@ -806,7 +844,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $full_list = opf_modules_categories('modules');
     foreach($modules as $module) {
         // backend-filtering is not supported when there is no class "Tool" 
-        if(($module['function'] != 'page') && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION')))) continue;  
+        if(($module['function'] != 'page') && (!(class_exists ("Tool") && defined('WBCE_VERSION')))) continue;  
         if(isset($full_list[$module['directory']])) {
             $type = $full_list[$module['directory']];
             if($type=='IGNORE') continue;
@@ -914,7 +952,7 @@ function opf_modules_categories($type='modules') {
         $m['poll'] = array();
         $m['listing'] = array();
         $m['various'] = array();
-        if (class_exists ("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+        if (class_exists ("Tool") && defined('WBCE_VERSION')){ // backend-filtering supported 
             $m['backend'] = array();
         }
         return($m);
@@ -1024,13 +1062,13 @@ function opf_preload_filter_definitions() {
         = $opf_PAGES 
         = $opf_MODULES = array();
     // fetch page-data
-    if(!$pages 
+    $pages 
        = opf_db_query( 
            "SELECT *"
            . " FROM `".TABLE_PREFIX."pages`"
            . " ORDER BY `level`,`position` ASC"
-        )
-    ) $pages=array();
+        );
+    if(!is_array($pages)) $pages=array();
     $pages_act = array();
     foreach($pages as $page) {
         $pages_act[(int)$page['page_id']] = $page;
@@ -1210,7 +1248,8 @@ array
 function opf_list_page_hierarchy() {
     // fetch all pages from DB
     $pages_all = array();
-    if(!$pages = opf_db_query( "SELECT * FROM ".TABLE_PREFIX."pages ORDER BY `level`,`position` ASC"))
+    $pages = opf_db_query( "SELECT * FROM ".TABLE_PREFIX."pages ORDER BY `level`,`position` ASC");
+    if(!is_array($pages))
         $pages = array();
     foreach($pages as $page) {
         $pages_all[(int)$page['page_id']]['title'] = $page['menu_title'];
@@ -1338,7 +1377,7 @@ global $LANG;
     } elseif($type=='tree') {
         $plist  = '<div class="checktreestylearea"><ul class="tree2 checktreestyle">';
         $plist .= '<li><input type="checkbox" name="searchresult" value="0" '.$search_checked.' /><label>'.$LANG['MOD_OPF']['TXT_SEARCH_RESULTS'].'</label></li>';
-        if (class_exists ("Tool") && defined('NEW_WBCE_VERSION')){ // backend-filtering supported 
+        if (class_exists ("Tool") && defined('WBCE_VERSION')){ // backend-filtering supported 
             $plist .= '<li><input type="checkbox" name="backend" value="backend" '.$backend_checked.' /><label>'.$LANG['MOD_OPF']['TXT_BACKEND'].'</label></li>';
         }
         $plist .= '<li><input type="checkbox" name="pages_parent[]" value="all" /><label>'.$LANG['MOD_OPF']['TXT_ALL_PAGES'].'</label><ul>';
@@ -1484,6 +1523,11 @@ function opf_save() {
                 $modules = unserialize($filter_old['modules']);
                 $pages = unserialize($filter_old['pages']);
                 $pages_parent = unserialize($filter_old['pages_parent']);
+            }
+        }
+        if(!empty($filter_old['name'])){
+            if(class_exists('Settings') && defined('WBCE_VERSION')){
+                Settings::Del( opf_filter_name_to_setting($filter_old['name']));
             }
         }
     }

@@ -8,12 +8,12 @@ languages/IT.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -226,6 +226,8 @@ $LANG['MOD_OPF']['TXT_DIR_WRITE_FAILED'] = 'Non &egrave; possibile scrivere al p
 $LANG['MOD_OPF']['TXT_UPLOAD_FAILED'] = 'caricamento non &egrave; riuscito';
 
 $LANG['MOD_OPF']['TXT_NOT_A_FILTER'] = 'file caricato non &egrave; un plugin filtro di output';
+
+$LANG['MOD_OPF']['TXT_LOOKS_LIKE_MODULE'] = ' - sembra d&apos;essere un filtro di modulo. Installarlo tra le <a href=%s>Moduli</a>.';
 
 $LANG['MOD_OPF']['TXT_ALREADY_INSTALLED'] = 'una versione pi&ugrave; recente &egrave; gi&agrave; installata';
 

@@ -8,12 +8,12 @@ upgrade.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -103,3 +103,16 @@ foreach($plugins as $plugin_dir){
     }
 }
 
+// Only block this if WBCE CMS installer is running, if this is an Upgrade or 
+// Module install, we need this thing. 
+if(!defined('WB_INSTALL')){  
+    // run install scripts of module filters - they should start upgrade if already installed
+    foreach( preg_grep('/\/install.php/', opf_io_filelist(WB_PATH.'/modules')) as $installer){
+        if(strpos($installer,'outputfilter_dashboard')===FALSE){ 
+            $contents = file_get_contents($installer);
+            if(preg_match('/opf_register_filter/',$contents)){
+                require($installer);
+            }
+        }
+    }
+}

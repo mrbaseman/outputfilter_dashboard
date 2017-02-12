@@ -8,12 +8,12 @@ naturaldocs_txt/functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -299,7 +299,7 @@ require_once(dirname(__FILE__).'/functions.php');
     additional_fields:
         Arrays of additional configuration elements.
 
-        In case the filter need some additional config-elements but it doesn't has its own Settings-Page / Admin-Tool,
+        In case the filter needs some additional config-elements but it doesn't have its own Settings-Page / Admin-Tool,
         you can add some fields using !additional_fields!. Possible field-types are
 
         text - normal HTML text-field
@@ -641,6 +641,14 @@ function opf_register_filter($filter, $serialized=FALSE) {
                                             $modules,$desc,$pages,$pages_parent,$allowedit,$allowedittarget,
                                             $configurl,$csspath,$helppath,$additional_values,$additional_fields,
                                             $additional_fields_languages);
+					    
+    if(class_exists('Settings') && defined('WBCE_VERSION')){
+        // force refresh the filter definitions
+        global $opf_FILTERS;
+        unset($opf_FILTERS); 
+        opf_set_active($name, $active);
+    }
+
     return($res);
 }
 
@@ -654,35 +662,61 @@ function opf_register_filter($filter, $serialized=FALSE) {
 	<install.php> to move the filter up to a target position denoted by the 
 	name of another filter. You can repeat this with different names of filters
 	from which you know that they have to be applied after the one you are installing.
+	Alternatively, if !$ref_name! is an array, the filter denoted by !$name! 
+	is moved upwards to the position of the upper-most entry of the whole list.
+	If !$ref_name! is ommited, the filter !$name! is moved up to the 
+	top of the whole list. In this case the return value is the new position of
+	the filter !$name!
 
     Prototype:
         %bool% opf_move_up_before( %string% $name, %string% $ref_name )
 
+        %array% opf_move_up_before( %string% $name, %array% $ref_name )
+
+        %int% opf_move_up_before( %string% $name )
+
     Parameters:
         $name - %(string)% the name of the filter to move up in the list
-        $ref_name - %(string)% name of the filter at the target position
+        $ref_name - %(string)% name of the filter at the target position or
+        $ref_name - %(array)% names of the filters at the target positions
 
     Returns:
         !TRUE! on success, !FALSE! if the types don't match or the filters were not found
+        or an array of bools, corresponding to the return values for each filter
+	or the position of !$name! if !$ref_name! is ommitted
 
     Example:
         > opf_move_up_before('opf CSS to head', 'Searchengine Highlighter');
 */
 
-function opf_move_up_before($name, $ref_name){
+function opf_move_up_before($name, $ref_name=""){
+    if(is_array($ref_name)){
+        $ret=array();
+        foreach($ref_name as $rn){
+	    $ret[]=opf_move_up_before($name, $rn);
+        }
+	return($ret);
+    }
     $name = opf_check_name($name);
     if(!$name) return(FALSE);
-    $pos = opf_get_position($name);
-    $type = opf_get_type($name);
+    if($ref_name==""){
+       $pos=0;
+       while(opf_move_up_one($name,FALSE)){
+           $pos = opf_get_position($name,FALSE);
+       }
+       return($pos);
+    }
+    $pos = opf_get_position($name,FALSE);
+    $type = opf_get_type($name,FALSE);
     if($pos!==FALSE && $type!==FALSE && $pos>0) {
 	$ref_name = opf_check_name($ref_name);
 	if(!$ref_name) return(FALSE);
-	$ref_pos = opf_get_position($ref_name);
-	$ref_type = opf_get_type($ref_name);
+	$ref_pos = opf_get_position($ref_name, FALSE);
+	$ref_type = opf_get_type($ref_name,FALSE);
         while($ref_pos!==FALSE && $pos!==FALSE && $ref_type==$type && $ref_pos>0 && $pos>$ref_pos) {
-	    if(opf_move_up_one($name)===FALSE) 
+	    if(opf_move_up_one($name,FALSE)===FALSE) 
 	        return(FALSE);
-	    $pos = opf_get_position($name);
+	    $pos = opf_get_position($name,FALSE);
 	}
      }
      return(TRUE);
@@ -735,6 +769,11 @@ function opf_unregister_filter($name) {
         }
         $res = opf_db_run_query( "DELETE FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `name`='%s'", $name);
         if($res) {
+	    if(class_exists('Settings') && defined('WBCE_VERSION')){
+        	Settings::Del( opf_filter_name_to_setting($name));
+        	Settings::Del( opf_filter_name_to_setting($name).'_be');
+	    }
+	    
             if(opf_db_run_query( "UPDATE `".TABLE_PREFIX."mod_outputfilter_dashboard` SET `position`=`position`-1
                       WHERE `type`='%s' AND `position`>%d", $type, $pos))
             return(TRUE);
@@ -1322,7 +1361,7 @@ function opf_filter_get_data($name='') {
     $name = opf_check_name($name);
     if(!$name)
         $name = opf_filter_get_name_current();
-    if($name)
+    if($name && in_array($name, $opf_FILTERS))
         return($opf_FILTERS[$name]);
     else return(FALSE);
 }
@@ -1498,8 +1537,9 @@ function opf_is_childpage($child, $parent) {
 function opf_filter_is_active($name) {
     if(opf_filter_get_rel_pos($name)===FALSE)
         return(FALSE);
-    else
-        return(TRUE);
+    else 
+        // this check is more expensive but takes settings into account
+        opf_is_active($name);
 }
 
 
@@ -1534,4 +1574,32 @@ function opf_filter_get_additional_values() {
         return($opf_FILTERS[$name]['additional_values']);
     else return(FALSE);
 }
+
+
+
+/*
+    Function: opf_filter_name_to_setting
+        For WBCE 1.2: This function converts the name of a filter to the settings string 
+	which is associated with the active/inactive state of the given filter name.
+
+    Prototype: 
+        %string% opf_filter_name_to_setting( %string% )
+
+    Parameters:
+        $name - %string% the name of the filter
+    
+    Returns:
+        the name of the corresponding setting (in lowercase letters)
+
+    Examples:
+        (start code)
+        if(Settings::Get(opf_filter_name_to_setting($name))){ 
+	  // do something;
+	}
+        (end)
+*/
+function opf_filter_name_to_setting($name) {
+    return "opf_" . preg_replace('/[^a-z_]/','', str_replace(' ','_', strtolower($name)));
+}
+
 

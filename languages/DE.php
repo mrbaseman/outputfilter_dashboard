@@ -8,12 +8,12 @@ languages/DE.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -112,7 +112,7 @@ $LANG['MOD_OPF']['TXT_OK'] = 'OK';
 
 $LANG['MOD_OPF']['TXT_DOWNLOAD'] = 'Download';
 
-$LANG['MOD_OPF']['TXT_DOWNLOAD_FAILED'] = 'Upload fehlgeschlagen';
+$LANG['MOD_OPF']['TXT_DOWNLOAD_FAILED'] = 'Download fehlgeschlagen';
 
 $LANG['MOD_OPF']['TXT_UPLOAD_SUCCESS']  = 'Upload erfolgreich';
 
@@ -225,6 +225,8 @@ $LANG['MOD_OPF']['TXT_DIR_WRITE_FAILED'] = 'Kann nicht ins Plugin-Verzeichnis sc
 $LANG['MOD_OPF']['TXT_UPLOAD_FAILED'] = 'Upload fehlgeschlagen';
 
 $LANG['MOD_OPF']['TXT_NOT_A_FILTER'] = 'Hochgeladene Datei ist kein OutputFilter Plugin';
+
+$LANG['MOD_OPF']['TXT_LOOKS_LIKE_MODULE'] = ' - es scheint ein Modulfilter zu sein. Installieren Sie es unter <a href=%s>Module</a>.';
 
 $LANG['MOD_OPF']['TXT_ALREADY_INSTALLED'] = 'Eine neuere Version ist bereits installiert';
 

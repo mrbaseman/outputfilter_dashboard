@@ -40,7 +40,7 @@ if(jQuery().sortable){
                     type:        'POST',
                     url:         AJAX_PLUGINS+'/ajax_dragdrop.php', 
                     data:        jQuery(this).sortable("serialize", { 
-                                     expression: /(.+)[_:](.+)/
+                                     expression: /(.+)[:](.+)/
                                  }) + '&action=updatePosition', 
                     dataType:     'json',
                     success:    function(json_respond){

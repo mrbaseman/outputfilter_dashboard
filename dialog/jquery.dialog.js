@@ -383,7 +383,7 @@ function fadeDialog(flag)
 /* define some message-functions */
 function opf_message(title, text, type, button1, button2, action) {
         DLGRESULT = null;
-        showDialog(title,text,type, 350, 120, false, false, true, 4, button1, button2);
+        showDialog(title,text,type, 450, 180, false, false, true, 4, button1, button2);
         //<!-- showDialog(title, message, type, width, height, autohide, atcursor, modal, buttons, button1, button2)-->
         if(action!=0) {
                 setTimeout("opf_message_helper('"+action+"')",100);

@@ -8,12 +8,12 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.0
+ * @version         1.5.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2016 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outpufilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
- * @link            http://forum.wbce.org/viewtopic.php?pid=3121
+ * @link            https://forum.wbce.org/viewtopic.php?id=176
  * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
  * @platform        WebsiteBaker 2.8.x
@@ -70,7 +70,7 @@ if($doSave){
     if ( method_exists( $admin, 'checkFTAN' ) ) { 
        if ( !$admin->checkFTAN()  ) {
           if ((ob_get_contents()=="") && (!headers_sent()) 
-              && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION'))) ){
+              && (!(class_exists ("Tool") && defined('WBCE_VERSION'))) ){
              $admin->print_header();
           }
           $admin->print_error($MESSAGE['GENERIC_SECURITY_ACCESS'], $ToolUrl);
@@ -82,7 +82,7 @@ if($doSave){
 $need_footer=FALSE;
 // depending on the WB version/fork the admin header is already printed/cached or not...
 if ((ob_get_contents()=="") && (!headers_sent()) 
-     && (!(class_exists ("Tool") && defined('NEW_WBCE_VERSION'))) ){ 
+     && (!(class_exists ("Tool") && defined('WBCE_VERSION'))) ){ 
     $admin->print_header();
     $need_footer=TRUE;
 }
@@ -248,6 +248,8 @@ if($add && $doSave ){ //================================================ add ===
         } else {
             $filter['sep_line'] = FALSE;
         }
+        // update active/inactive state from Settings
+        $filter['active'] = opf_is_active($filter['name']) || ( ($id == $filter['id']) && $active );
         if($filter['active']) {
             $filter['active_link'] = "$ToolUrl&amp;id=$filter_id&amp;active=0";
         } else {
@@ -461,6 +463,7 @@ if($add && $doSave ){ //================================================ add ===
     $tpl->set_block('page', 'main_block', 'main');
     $tpl->parse('main', 'main_block', false);
     print opf_filter_Comments($tpl->parse('output', 'main', false));
+
 }
 
 if($need_footer){
