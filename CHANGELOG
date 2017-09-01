@@ -2,6 +2,10 @@
 Header: Version-History
 
 1.5:
+1.5.5 %(mrbaseman, 29 Aug 2017)%
+        - fix uninstall.php in case MEDIA_DIRECTORY does not start with a slash
+        - fix ajax drag&drop which caused warning when issued after editing a filter
+
 1.5.4 %(mrbaseman, 19 Apr 2017)%
         - fix for opf_db functions when previous queries have triggered already an error
 

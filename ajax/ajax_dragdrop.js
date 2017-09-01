@@ -48,11 +48,7 @@ if(jQuery().sortable){
                             alert(json_respond.message);
                         }
                         // due to expiring IDKEYs we have to refresh the page
-                        if(window.location.href==MODULE_URL) {
-                            window.location.reload();
-                        } else {
-                            window.location.replace(MODULE_URL);
-                        }
+                        window.location.replace(MODULE_URL);
                     }
                 });
             }

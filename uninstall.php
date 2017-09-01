@@ -8,7 +8,7 @@ uninstall.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.4
+ * @version         1.5.4.1
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -54,7 +54,7 @@ if (!include(get_module_language_file($mod_dir))) return;
 require_once(dirname(__FILE__).'/functions.php');
 
 // delete media-dir
-opf_io_rmdir(WB_PATH.MEDIA_DIRECTORY.'/opf_plugins');
+opf_io_rmdir(WB_PATH.'/'.MEDIA_DIRECTORY.'/opf_plugins');
 
 opf_db_run_query("DROP TABLE IF EXISTS `".TABLE_PREFIX."mod_outputfilter_dashboard`");
 opf_db_run_query("DROP TABLE IF EXISTS `".TABLE_PREFIX."mod_outputfilter_dashboard_settings`");
