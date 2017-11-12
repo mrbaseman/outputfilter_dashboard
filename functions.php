@@ -8,7 +8,7 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.4
+ * @version         1.5.4.2
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -79,7 +79,7 @@ if(!defined('OPF_TYPE_SECTION')) {
 }
 
 // when exporting we should be able to revert these assignments
-function opf_revert_type_consts($input){
+function opf_revert_type_consts($input, $OPF_TYPE_ASSIGNMENTS){
     foreach( $OPF_TYPE_ASSIGNMENTS as $opf_type_name => $opf_type_string){
        $input = preg_replace("/'".$opf_type_string."'/", $opf_type_name, $input);
     }
@@ -1170,9 +1170,9 @@ function opf_apply_filters(&$content, $type, $module, $page_id, $section_id, $wb
         if(is_array($filter) && isset($filter['pages_parent'])) {
             if($filter['active'] && $filter['type']==$type
                 && ($module=='' || in_array($module, $filter['modules']) || in_array('all', $filter['modules']))
-                && ( ($page_id == 'backend')
-                 || (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages']))
-                 || (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent']))
+                && ( ($page_id == 'backend') && (in_array('backend', $filter['pages']))
+                 || ( ($page_id != 'backend') && (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages'])) )
+                 || ( ($page_id != 'backend') && (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent'])) )
                 )) {
 
                 if(!function_exists($filter['funcname'])) {
