@@ -8,9 +8,9 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.4.2
+ * @version         1.5.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            https://forum.wbce.org/viewtopic.php?id=176
@@ -902,6 +902,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $module['aggregator']     = 'listing';
     $module['anyitems']       = 'shop';
     $module['anytopics']      = 'wrapper';
+    $module['audioplayer']    = 'various';
     $module['Auto_Gallery']   = 'gallery';
     $module['bakery']         = 'shop';
     $module['bookings_v2']    = 'listing';
@@ -916,6 +917,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $module['dirlist']        = 'listing';
     $module['doodler']        = 'poll';
     $module['download_gallery'] ='page';
+    $module['enhanced_aggregator'] = 'listing';
     $module['event']          = 'calendar';
     $module['event_calendar'] = 'calendar';
     $module['extcal']         = 'calendar';
@@ -924,16 +926,19 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $module['faqmaker']       = 'listing';
     $module['feedback']       = 'various';
     $module['flickrgallery']  = 'gallery';
-    $module['Foldergallery']  = 'gallery';
+    $module['foldergallery']  = 'gallery';
     $module['form']           = 'form';
     $module['formx']          = 'form';
+    $module['forum']          = 'various';
     $module['gallery']        = 'gallery';
     $module['gdpics']         = 'gallery';
+    $module['glossary']       = 'listing';
     $module['gocart']         = 'shop';
     $module['guestbook']      = 'page';
     $module['imageflow']      = 'gallery';
     $module['imagegallery']   = 'gallery';
     $module['inlinewrapper']  = 'wrapper';
+    $module['jqCollapse']     = 'listing';
     $module['lastitems']      = 'shop';
     $module['lightbox2']      = 'gallery';
     $module['lightbox']       = 'gallery';
@@ -942,7 +947,8 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $module['members']        = 'listing';
     $module['mfz']            = 'listing';
     $module['miniform']       = 'form';
-    $module['mminigallery']   = 'gallery';
+    $module['minigallery']    = 'gallery';
+    $module['minigal2']       = 'gallery';
     $module['mpform']         = 'form';
     $module['news']           = 'page';
     $module['newsreader']     = 'various';
@@ -951,6 +957,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     $module['pickle']         = 'gallery';
     $module['picturebox']     = 'gallery';
     $module['polls']          = 'poll';
+    $module['procalendar']    = 'calendar';
     $module['tiltviewer']     = 'gallery';
     $module['shoutbox']       = 'various';
     $module['show_code']      = 'code';
@@ -997,6 +1004,7 @@ function opf_modules_categories($type='modules') {
     $module['aggregator']     = 'listing';
     $module['anyitems']       = 'shop';
     $module['anytopics']      = 'wrapper';
+    $module['audioplayer']    = 'various';
     $module['Auto_Gallery']   = 'gallery';
     $module['bakery']         = 'shop';
     $module['bookings_v2']    = 'listing';
@@ -1011,6 +1019,7 @@ function opf_modules_categories($type='modules') {
     $module['dirlist']        = 'listing';
     $module['doodler']        = 'poll';
     $module['download_gallery'] ='page';
+    $module['enhanced_aggregator'] = 'listing';
     $module['event']          = 'calendar';
     $module['event_calendar'] = 'calendar';
     $module['extcal']         = 'calendar';
@@ -1019,16 +1028,19 @@ function opf_modules_categories($type='modules') {
     $module['faqmaker']       = 'listing';
     $module['feedback']       = 'various';
     $module['flickrgallery']  = 'gallery';
-    $module['Foldergallery']  = 'gallery';
+    $module['foldergallery']  = 'gallery';
     $module['form']           = 'form';
     $module['formx']          = 'form';
+    $module['forum']          = 'various';
     $module['gallery']        = 'gallery';
     $module['gdpics']         = 'gallery';
+    $module['glossary']       = 'listing';
     $module['gocart']         = 'shop';
     $module['guestbook']      = 'page';
     $module['imageflow']      = 'gallery';
     $module['imagegallery']   = 'gallery';
     $module['inlinewrapper']  = 'wrapper';
+    $module['jqCollapse']     = 'listing';
     $module['lastitems']      = 'shop';
     $module['lightbox2']      = 'gallery';
     $module['lightbox']       = 'gallery';
@@ -1037,7 +1049,8 @@ function opf_modules_categories($type='modules') {
     $module['members']        = 'listing';
     $module['mfz']            = 'listing';
     $module['miniform']       = 'form';
-    $module['mminigallery']   = 'gallery';
+    $module['minigallery']    = 'gallery';
+    $module['minigal2']       = 'gallery';
     $module['mpform']         = 'form';
     $module['news']           = 'page';
     $module['newsreader']     = 'various';
@@ -1046,6 +1059,7 @@ function opf_modules_categories($type='modules') {
     $module['pickle']         = 'gallery';
     $module['picturebox']     = 'gallery';
     $module['polls']          = 'poll';
+    $module['procalendar']    = 'calendar';
     $module['tiltviewer']     = 'gallery';
     $module['shoutbox']       = 'various';
     $module['show_code']      = 'code';
@@ -1173,6 +1187,8 @@ function opf_apply_filters(&$content, $type, $module, $page_id, $section_id, $wb
                 && ( ($page_id == 'backend') && (in_array('backend', $filter['pages']))
                  || ( ($page_id != 'backend') && (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages'])) )
                  || ( ($page_id != 'backend') && (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent'])) )
+                 || ( ($page_id == '0') && (in_array('all', $filter['pages']) || in_array('all', $filter['pages_parent']) || in_array('0', $filter['pages_parent'])  )  )
+
                 )) {
 
                 if(!function_exists($filter['funcname'])) {

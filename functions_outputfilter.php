@@ -8,9 +8,9 @@ functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.4
+ * @version         1.5.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            https://forum.wbce.org/viewtopic.php?id=176
@@ -267,16 +267,16 @@ require_once(dirname(__FILE__).'/functions.php');
         There are some aliases defined
 
         'all' - all installed modules
-        'all_page_types' - all page-type modules: wysiwyg, news, guestbook, download_gallery, manual
-        'all_form_types' - form, formx, mpform
-        'all_gallery_types' - fancy_box, flickrgallery, gallery, gdpics, imageflow, imagegallery, lightbox2, lightbox, panoramic_image, pickle, picturebox, tiltviewer, smoothgallery, swift, slideshow
+        'all_page_types' - all page-type modules: wysiwyg, news, guestbook, download_gallery, manual, mapbaker, newsarc
+        'all_form_types' - form, formx, mpform, miniform
+        'all_gallery_types' - Auto_Gallery, fancy_box, flickrgallery, foldergallery,  gallery, gdpics, imageflow, imagegallery, lightbox2, lightbox, minigallery, minigal2, panoramic_image, pickle, picturebox, tiltviewer, smoothgallery, swift, slideshow
         'all_wrapper_types' - curl, inlinewrapper, wrapper
-        'all_calendar_types' - calendar, event, event_calendar
-        'all_shop_types' - bakery, gocart,
-        'all_code_types' - code, code2, show_code
+        'all_calendar_types' - calendar, concert, event, event_calendar, extcal, procalendar
+        'all_shop_types' - bakery, gocart, anyitems, lastitems
+        'all_code_types' - code, code2, show_code, show_code_geshi, color4code
         'all_poll_types' - doodler, polls
-        'all_listing_types' - aggregator, bookings_v2, bookmarks, cabin, dirlist, faqbaker, faqmaker, members, mfz, sitemap
-        'all_various_types' - feedback, newsreader, shoutbox, simpleviewer, small_ads, zitate
+        'all_listing_types' - accordion, addressbok, aggregator, bookings_v2, bookmarks, cabin, dirlist, enhanced_aggregator, faqbaker, faqmaker, glossary, jqCollapse, members, mfz, sitemap
+        'all_various_types' - audioplayer, feedback, forum, newsreader, shoutbox, simpleviewer, small_ads, wb-forum, zitate
 
         See <opf_modules_categories> for the actual module -> category relation.
 

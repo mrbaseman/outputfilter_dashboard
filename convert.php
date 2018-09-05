@@ -8,9 +8,9 @@ convert.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.4
+ * @version         1.5.5
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2017 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
  * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
  * @link            https://forum.wbce.org/viewtopic.php?id=176
@@ -122,6 +122,7 @@ if($filter['plugin']!='') {
     $filter_file = str_replace('{SYSVAR:WB_PATH}', WB_PATH, $filter_file);
     if(file_exists($filter_file)){
         $filter['func']=file_get_contents($filter_file);
+        $filter['userfunc']=1;
         $filter['file'] = '';
         rm_full_dir($plugin_dir.$filter['plugin']);
         $filter['plugin'] = '';
@@ -143,6 +144,7 @@ if($filter['plugin']!='') {
     // get human readable dump
     $filter_func = $filter['func'];
     $filter['func'] = '';
+    $filter['userfunc']=0;
     $filter['file'] = '{OPF:PLUGIN_PATH}/filter.php';
     $filter_dump = opf_dump_var($filter);
     // get filter-data serialised
