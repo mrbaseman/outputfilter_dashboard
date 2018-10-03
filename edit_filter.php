@@ -8,7 +8,7 @@ edit_filter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -218,6 +218,9 @@ array_merge($LANG['MOD_OPF'],
     'tpl_filter_file' => $file,
     'tpl_filter_description' => $desc,
     'tpl_filter_helppath_onclick' => $helppath_onclick,
+    'tpl_filter_configurl_start' => ($filter['configurl'])?"":"<!--/*",
+    'tpl_filter_configurl_end' => ($filter['configurl'])?"&nbsp;":"*/-->",
+    'tpl_filter_configurl' => opf_quotes($filter['configurl']),
     'tpl_funcname' => $funcname,
     'tpl_func' => htmlspecialchars($func,ENT_QUOTES),
     'tpl_cancel_onclick' => 'javascript: window.location = \''.ADMIN_URL.'/admintools/tool.php?tool='.basename(dirname(__FILE__)).'\';',
@@ -260,51 +263,55 @@ array_merge($LANG['MOD_OPF'],
         $TPL_EXTRA_FIELDS_BLOCK="";
         foreach($extra_fields as $field){
             $template=$field['type'];
-        if($field['type']=='editarea')$template='textarea';
-        $tpl_field_text=opf_quotes($field['text']);
-        $tpl->set_var('tpl_field_text', $tpl_field_text);
-        $tpl_field_name=opf_quotes($field['name']);
-        $tpl->set_var('tpl_field_name', $tpl_field_name);
-        $tpl_field_value=$field['value'];
-        $tpl_field_id='';
-        if($template=='textarea'){
-            $tpl_field_id=opf_quotes($field['id']);
-        } else {
-            $tpl_field_value=opf_quotes($tpl_field_value);
-        }
-        $tpl->set_var('tpl_field_value', $tpl_field_value);
-        $tpl->set_var('tpl_field_id', $tpl_field_id);
-        $tpl_field_style=$field['style'];
-        $tpl->set_var('tpl_field_style', $tpl_field_style);
-        if(isset($field['checked']))
-            $tpl_field_checked=$field['checked'];
-            else $tpl_field_checked="";
-        $tpl->set_var('tpl_field_checked', $tpl_field_checked);
-        if(isset($field['options']))
-            $tpl_field_options=$field['options'];
-            else $tpl_field_options="";
-        $tpl->set_var('tpl_field_options', $tpl_field_options);
-
-        if($field['type']=='array'){
-            $tpl->set_var('tpl_field_value', serialize($tpl_field_value));
-            $tpl->set_block('page', 'array_row_block', 'extra_field');
-            foreach($field['value'] as $key=>$value){
-            $tpl->set_var('tpl_key', $key);
-            $tpl->set_var('tpl_value', $value);
-            $keyid=uniqid();
-            $list_growfield[]=$keyid;
-            $tpl->set_var('tpl_keyid', $keyid);
-            $valid=uniqid();
-            $list_growfield[]=$valid;
-            $tpl->set_var('tpl_valid', $valid);
-            // first parse the block specific to this field type
-               $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', 'array_row_block', false);
+            if($field['type']=='editarea')$template='textarea';
+            $tpl_field_text=opf_quotes($field['text']);
+            $tpl->set_var('tpl_field_text', $tpl_field_text);
+            $tpl_field_name=opf_quotes($field['name']);
+            $tpl->set_var('tpl_field_name', $tpl_field_name);
+            $tpl_field_value=$field['value'];
+            $tpl_field_id='';
+            if($template=='textarea'){
+                $tpl_field_id=opf_quotes($field['id']);
+            } else {
+                $tpl_field_value=opf_quotes($tpl_field_value);
             }
-        } else {
-           // in short, pretty much the same, but just do it only once
-           $tpl->set_block('page', $template.'_block', 'extra_field');
-           $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', $template.'_block', false);
-        }
+            $tpl->set_var('tpl_field_value', $tpl_field_value);
+            $tpl->set_var('tpl_field_id', $tpl_field_id);
+            $tpl_field_style=$field['style'];
+            $tpl->set_var('tpl_field_style', $tpl_field_style);
+            if(isset($field['checked']))
+                $tpl_field_checked=$field['checked'];
+                else $tpl_field_checked="";
+            $tpl->set_var('tpl_field_checked', $tpl_field_checked);
+            if(isset($field['options']))
+                $tpl_field_options=$field['options'];
+                else $tpl_field_options="";
+            $tpl->set_var('tpl_field_options', $tpl_field_options);
+
+            if($field['type']=='array'){
+                $tpl->set_var('tpl_field_value', serialize($tpl_field_value));
+                $tpl_page=$tpl->get_var('page'); // save the current template
+                $tpl->set_block('page', 'array_row_block', 'extra_field');
+                foreach($field['value'] as $key=>$value){
+                    $tpl->set_var('tpl_key', $key);
+                    $tpl->set_var('tpl_value', $value);
+                    $keyid=uniqid();
+                    $list_growfield[]=$keyid;
+                    $tpl->set_var('tpl_keyid', $keyid);
+                    $valid=uniqid();
+                    $list_growfield[]=$valid;
+                    $tpl->set_var('tpl_valid', $valid);
+                    // first parse the block specific to this field type
+                       $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', 'array_row_block', false);
+                }
+                $tpl->set_var('page',$tpl_page); // restore the template for future iterations
+            } else {
+                // in short, pretty much the same, but just do it only once
+                $tpl_page=$tpl->get_var('page'); // save the current template
+                $tpl->set_block('page', $template.'_block', 'extra_field');
+                $TPL_EXTRA_FIELDS_BLOCK .= $tpl->parse('TPL_FIELD_BLOCK', $template.'_block', false);
+                $tpl->set_var('page',$tpl_page); // restore the template for future iterations
+            }
         }
         $tpl->set_var('TPL_EXTRA_FIELDS_BLOCK', $TPL_EXTRA_FIELDS_BLOCK);
     } else {

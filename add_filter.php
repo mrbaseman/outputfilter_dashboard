@@ -8,7 +8,7 @@ add_filter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -127,6 +127,9 @@ array_merge($LANG['MOD_OPF'],
     'tpl_filter_file' => opf_quotes($file),
     'tpl_filter_description' => opf_quotes($desc),
     'tpl_filter_helppath_onclick' => '', // opf_quotes(''),
+    'tpl_filter_configurl_start' => "<!--/*",
+    'tpl_filter_configurl_end' => "*/-->",
+    'tpl_filter_configurl' => '',
     'TPL_HELP_BLOCK' => '',
     'tpl_funcname' => $funcname,
     'tpl_func' => $func,

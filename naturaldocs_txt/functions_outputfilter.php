@@ -8,7 +8,7 @@ naturaldocs_txt/functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -1355,8 +1355,10 @@ function opf_filter_get_name_current() {
 function opf_filter_get_data($name='') {
     global $opf_FILTERS;
     if(!(isset($opf_FILTERS) && is_array($opf_FILTERS))) {
-        trigger_error('opf_filter_get_data(): global Array not defined', E_USER_WARNING);
+/*        trigger_error('opf_filter_get_data(): global Array not defined', E_USER_WARNING);
         return(FALSE);
+*/
+        opf_preload_filter_definitions(); 
     }
     $name = opf_check_name($name);
     if(!$name)

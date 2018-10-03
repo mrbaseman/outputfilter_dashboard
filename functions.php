@@ -8,7 +8,7 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -175,10 +175,12 @@ function opf_db_query_vars($q_str) {
   $results = array();
   if($results = $result->fetchRow()) {
     $results=$results[0];
-    if(count($results)==1)
-      if(is_array($results))
+    if(is_array($results)){
+      if(count($results)==1)
          return(current($results)); // single value
-    if(count($results)==0) return(TRUE); // success without results
+       if(count($results)==0)
+         return(TRUE); // success without results
+    }
     return($results); // array filled with several values
   }
   if(empty($results)) return(NULL); // no matches
@@ -876,6 +878,7 @@ function opf_list_target_modules($sorted=FALSE) { // read from table wb_addons
     // sort modules: galleries, shops, page, code, ...
     $m = opf_modules_categories('categories');
     $full_list = opf_modules_categories('modules');
+    if(!is_array($modules))return($m);
     foreach($modules as $module) {
         // backend-filtering is not supported when there is no class "Tool"
         if(($module['function'] != 'page') && (!(class_exists ("Tool") && defined('WBCE_VERSION')))) continue;

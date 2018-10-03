@@ -8,7 +8,7 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -92,6 +92,24 @@ if ( method_exists( $admin, 'getFTAN' ) ) {
   $ftan=$admin->getFTAN();
 }
 
+$simple_backend=dirname($ModPath)."/opf_simple_backend/tool.php";
+if(class_exists('Settings') && defined('WBCE_VERSION')
+    && file_exists($simple_backend)){
+  if(((isset($_POST['show_advanced_backend'])) && ($_POST['show_advanced_backend'] == 0))
+    || ((!(isset($_POST['show_advanced_backend'])) &&
+    (!(Settings::Get( 'opf_show_advanced_backend', TRUE)))))){
+    include($simple_backend);
+    if($need_footer){
+      $admin->print_footer();
+    }
+    exit(0);
+  } else {
+    $simple_backend=dirname($ModPath)."/opf_simple_backend/advanced.php";
+  }
+} else {
+  $simple_backend="";
+}
+
 $now = time();
 
 // First, perform some actions
@@ -105,6 +123,7 @@ $delete    = opf_fetch_get( 'delete', FALSE, 'exists');
 $convert   = opf_fetch_get( 'convert', FALSE, 'exists');
 $css_save  = opf_fetch_get( 'css_save', FALSE, 'exists');
 $export    = opf_fetch_get( 'export', FALSE, 'exists');
+$filter    = opf_fetch_get( 'filter', NULL, 'string');
 // fetch values from $_POST[]
 $filtername = opf_fetch_post( 'name', NULL, 'string');
 $funcname   = opf_fetch_post( 'funcname', NULL, 'string');
@@ -464,6 +483,10 @@ if($add && $doSave ){ //================================================ add ===
     $tpl->parse('main', 'main_block', false);
     print opf_filter_Comments($tpl->parse('output', 'main', false));
 
+
+    if(($simple_backend!="")&&(file_exists($simple_backend))){
+      include($simple_backend);
+    }
 }
 
 if($need_footer){

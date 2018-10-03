@@ -6,7 +6,7 @@ templates/add_edit.htt
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.5
+ * @version         1.5.6
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2018 Martin Hecht (mrbaseman)
  * @link            https://github.com/WebsiteBaker-modules/outputfilter_dashboard
@@ -55,6 +55,9 @@ templates/add_edit.htt
         <td><input type="text" name="name" value="{tpl_filter_name}" size="40" {tpl_filter_readonly} />
             &nbsp;<input id="activity" type="checkbox" class="activity" value="1" name="active" {tpl_filter_active} />
             &nbsp;<label for="activity" style="font-size:x-small;font-weight:bold;color:#515D76;">{TXT_ACTIVE} / {TXT_INACTIVE}</label>
+            {tpl_filter_configurl_start}
+            <a href="{tpl_filter_configurl}" title="{TXT_CONFIG_FILTER}"><img src="{IMAGE_URL}/config.png" alt="[{TXT_CONFIG_FILTER}]" border="0" /></a>
+            {tpl_filter_configurl_end}
         </td>
 
 
