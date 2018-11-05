@@ -2,12 +2,17 @@
 Header: Version-History
 
 1.5:
-1.5.6 %(mrbaseman, 3 Oct 2018)%
+1.5.6 %(mrbaseman, 04 Nov 2018)%
         - support a legacy module !opf_simple_backend! to switch between basic and advanced backend view
 	- avoid warning during installation when shipped as core module
 	- php 7.2 fixes
 	- add configurl button in the filter edit view, if applicable
 	- allow multiple uses of the same field type in extra fields
+	- change the logic when backend filtering shall be offered
+	- correctly start incrementing position of installed filters
+	- fix bug in !opf_filter_get_data()! to find index correctly 
+	- fix the logic for the backend filtering - module filtering not for inline filters
+	- print footer always when an exit() is issued in the backend tool
 
 1.5.5 %(mrbaseman, 5 Sep 2018)%
         - fix uninstall.php in case MEDIA_DIRECTORY does not start with a slash

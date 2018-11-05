@@ -1186,12 +1186,11 @@ function opf_apply_filters(&$content, $type, $module, $page_id, $section_id, $wb
     foreach($opf_FILTERS as $key => $filter) {
         if(is_array($filter) && isset($filter['pages_parent'])) {
             if($filter['active'] && $filter['type']==$type
-                && ($module=='' || in_array($module, $filter['modules']) || in_array('all', $filter['modules']))
-                && ( ($page_id == 'backend') && (in_array('backend', $filter['pages']))
-                 || ( ($page_id != 'backend') && (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages'])) )
-                 || ( ($page_id != 'backend') && (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent'])) )
-                 || ( ($page_id == '0') && (in_array('all', $filter['pages']) || in_array('all', $filter['pages_parent']) || in_array('0', $filter['pages_parent'])  )  )
-
+                && ( $module==FALSE || $module=='' || in_array($module, $filter['modules']) || in_array('all', $filter['modules']) )
+                && ( ( ($page_id == 'backend') && (in_array('backend', $filter['pages']) || in_array('backend',$filter['pages_parent'])) )
+                  || ( ($page_id != 'backend') && (in_array('all', $filter['pages']) || in_array($page_id, $filter['pages'])) )
+                  || ( ($page_id != 'backend') && (in_array('all', $filter['pages_parent']) || in_array($page_id, $filter['pages_parent'])) )
+                  || ( ($page_id == '0') && (in_array('all', $filter['pages']) || in_array('all', $filter['pages_parent']) || in_array('0', $filter['pages_parent'])) )
                 )) {
 
                 if(!function_exists($filter['funcname'])) {
@@ -1448,7 +1447,7 @@ global $LANG;
     } elseif($type=='tree') {
         $plist  = '<div class="checktreestylearea"><ul class="tree2 checktreestyle">';
         $plist .= '<li><input type="checkbox" name="searchresult" value="0" '.$search_checked.' /><label>'.$LANG['MOD_OPF']['TXT_SEARCH_RESULTS'].'</label></li>';
-        if (class_exists ("Tool") && defined('WBCE_VERSION')){ // backend-filtering supported
+        if (defined('WBCE_VERSION') && version_compare(WBCE_VERSION, '1.3.0', '>=')){ // backend-filtering in general for pages supported
             $plist .= '<li><input type="checkbox" name="backend" value="backend" '.$backend_checked.' /><label>'.$LANG['MOD_OPF']['TXT_BACKEND'].'</label></li>';
         }
         $plist .= '<li><input type="checkbox" name="pages_parent[]" value="all" /><label>'.$LANG['MOD_OPF']['TXT_ALL_PAGES'].'</label><ul>';

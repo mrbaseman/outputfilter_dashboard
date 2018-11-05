@@ -104,8 +104,8 @@ foreach($plugins as $plugin_dir){
 }
 
 // Only block this if WBCE CMS installer is running, if this is an Upgrade or
-// Module install, we need this thing.
-if(!defined('WB_INSTALL')){
+// Module install, we need this. But the installer registers the filter-modules later.
+if(!defined('WB_INSTALLER')){
     // run install scripts of module filters - they should start upgrade if already installed
     foreach( preg_grep('/\/install.php/', opf_io_filelist(WB_PATH.'/modules')) as $installer){
         if(strpos($installer,'outputfilter_dashboard')===FALSE){

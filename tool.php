@@ -93,19 +93,15 @@ if ( method_exists( $admin, 'getFTAN' ) ) {
 }
 
 $simple_backend=dirname($ModPath)."/opf_simple_backend/tool.php";
-if(class_exists('Settings') && defined('WBCE_VERSION')
-    && file_exists($simple_backend)){
-  if(((isset($_POST['show_advanced_backend'])) && ($_POST['show_advanced_backend'] == 0))
-    || ((!(isset($_POST['show_advanced_backend'])) &&
-    (!(Settings::Get( 'opf_show_advanced_backend', TRUE)))))){
+if(class_exists('Settings') && defined('WBCE_VERSION') && file_exists($simple_backend)){
+  if(isset($_POST['show_advanced_backend']) || ! Settings::Get( 'opf_show_advanced_backend', TRUE)){
     include($simple_backend);
-    if($need_footer){
+    if( ! Settings::Get( 'opf_show_advanced_backend', TRUE)){
       $admin->print_footer();
+      exit(0);
     }
-    exit(0);
-  } else {
-    $simple_backend=dirname($ModPath)."/opf_simple_backend/advanced.php";
   }
+  $simple_backend=dirname($ModPath)."/opf_simple_backend/advanced.php";
 } else {
   $simple_backend="";
 }

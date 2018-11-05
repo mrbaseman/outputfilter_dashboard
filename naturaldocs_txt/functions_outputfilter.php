@@ -577,7 +577,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
     
     // get next free position for type
     $position =    opf_db_query_vars( "SELECT MAX(`position`) FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `type`='%s'", $type);
-    if(!$position) $position = 0;  // NULL -> no entries
+    if($position===NULL) $position = 0;  // NULL -> no entries
     else ++$position;
 
     // new entry or update?
@@ -1363,7 +1363,7 @@ function opf_filter_get_data($name='') {
     $name = opf_check_name($name);
     if(!$name)
         $name = opf_filter_get_name_current();
-    if($name && in_array($name, $opf_FILTERS))
+    if($name && array_key_exists($name, $opf_FILTERS))
         return($opf_FILTERS[$name]);
     else return(FALSE);
 }
