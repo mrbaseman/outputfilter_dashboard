@@ -8,7 +8,7 @@ tool.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.13
+ * @version         1.5.14
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2021 Martin Hecht (mrbaseman)
  * @link            https://github.com/mrbaseman/outputfilter_dashboard
@@ -290,7 +290,7 @@ if($add && $doSave ){ //================================================ add ===
                 if(!empty($filter['plugin'])){ // relative paths in plugin filters
                     $filter['helppath_onclick'] = OPF_PLUGINS_URL.$filter['plugin'].'/'.$filter['helppath_onclick'];
                 } else if(!empty($filter['file'])){ // the same for module filters
-                    $filter['helppath_onclick'] = preg_replace('/[^\/]*$/','',filter['file']).$filter['helppath_onclick'];
+                    $filter['helppath_onclick'] = preg_replace('/[^\/]*$/','',$filter['file']).$filter['helppath_onclick'];
                     $filter['helppath_onclick'] = str_replace(WB_PATH,WB_URL,$filter['helppath_onclick']);
                 }
             }

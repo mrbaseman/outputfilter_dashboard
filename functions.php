@@ -8,7 +8,7 @@ functions.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.13
+ * @version         1.5.14
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
  * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2021 Martin Hecht (mrbaseman)
  * @link            https://github.com/mrbaseman/outputfilter_dashboard
@@ -1129,12 +1129,19 @@ function opf_replace_sysvar($filter, $plugin='')
 function opf_insert_sysvar($filter,$plugin='') {
     if($plugin=='' && is_array($filter) && isset($filter['plugin']))
         $plugin=$filter['plugin'];
-    if($plugin!='')
-          $filter = str_replace(OPF_PLUGINS_PATH.$plugin, '{OPF:PLUGIN_PATH}', $filter);
-    $filter = str_replace(WB_PATH, '{SYSVAR:WB_PATH}', $filter);
-    if($plugin!='')
-        $filter = str_replace(OPF_PLUGINS_URL.$plugin, '{OPF:PLUGIN_URL}', $filter);
-    $filter = str_replace(WB_URL, '{SYSVAR:WB_URL}', $filter);
+    $filter_as_string = json_encode($filter);
+    if($plugin!='') {
+        #$filter = str_replace(OPF_PLUGINS_PATH.$plugin, '{OPF:PLUGIN_PATH}', $filter);
+        $filter_as_string = str_replace(OPF_PLUGINS_PATH.$plugin, '{OPF:PLUGIN_PATH}', $filter_as_string);
+    }
+    #$filter = str_replace(WB_PATH, '{SYSVAR:WB_PATH}', $filter);
+    $filter_as_string = str_replace(WB_PATH, '{SYSVAR:WB_PATH}', $filter_as_string);
+    if($plugin!='') {
+        #$filter = str_replace(OPF_PLUGINS_URL.$plugin, '{OPF:PLUGIN_URL}', $filter);
+        $filter_as_string = str_replace(OPF_PLUGINS_URL.$plugin, '{OPF:PLUGIN_URL}', $filter_as_string);
+    }
+    $filter_as_string = str_replace(WB_URL, '{SYSVAR:WB_URL}', $filter_as_string);
+    $filter = json_decode($filter_as_string,true);
     return $filter;
 }
 
