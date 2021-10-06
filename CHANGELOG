@@ -2,6 +2,9 @@
 Header: Version-History
 
 1.5:
+1.5.16 %(mrbaseman, 1 Jul, 2021)%
+        - update cachecontrol plugin filter to version 1.0.7
+
 1.5.15 %(mrbaseman, 31 May 2021)%
         - fail-safe fix for filter function, thanks to Atlasfreak
         - add logging a notice when filter fails
