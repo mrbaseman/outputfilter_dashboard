@@ -6,16 +6,15 @@ backend_body.js
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.16
+ * @version         1.6.3
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2021 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010-2023 Christian M. Stefan (Stefek), 2016-2023 Martin Hecht (mrbaseman)
  * @link            https://github.com/mrbaseman/outputfilter_dashboard
- * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
+ * @link            https://addons.wbce.org/pages/addons.php?do=item&item=53
  * @link            https://forum.wbce.org/viewtopic.php?id=176
- * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
- * @platform        WebsiteBaker 2.8.x or WBCE
- * @requirements    PHP 5.4 and higher
+ * @platform        WBCE 1.x
+ * @requirements    PHP 7.4 - 8.2
  *
  * This file is part of OutputFilter-Dashboard, a module for WBCE and Website Baker CMS.
  *
@@ -34,36 +33,45 @@ backend_body.js
  *
  **/
 
-$(document).ready(function()
-{
-// ---| insert jQuery Dialogue CSS & JS Files
-    if($("#dashboard").length) {
-       $.insert(WB_URL+"/modules/outputfilter_dashboard/dialog/jquery.dialog.css");
-       $.insert(WB_URL+"/modules/outputfilter_dashboard/dialog/jquery.dialog.js");
-      }
-// ---| show upload area
-  $("button.show-upload").click(function() {
-    $("#upload-panel").slideToggle("fast");
-  });
 
-// ---| show upload area
-  $("p#close-panel img").click(function() {
-    $("#upload-panel").slideToggle("fast");
-  });
+var MODULE_URL = ADMIN_URL + '/admintools/tool.php?tool=outputfilter_dashboard';
+var ICONS = IMAGE_URL;
+var AJAX_PLUGINS =  WB_URL + '/modules/outputfilter_dashboard/ajax';
+$(document).ready(function ()
+{
+    // ---| insert jQuery Dialogue CSS & JS Files
+    if ($("#dashboard").length) {
+        $.insert(WB_URL + "/modules/outputfilter_dashboard/dialog/jquery.dialog.css");
+        $.insert(WB_URL + "/modules/outputfilter_dashboard/dialog/jquery.dialog.js");
+    }
+    // ---| show upload area
+    $("button.show-upload").click(function () {
+        $("#upload-panel").slideToggle("fast");
+    });
+
+    // ---| show upload area
+    $("p#close-panel img").click(function () {
+        $("#upload-panel").slideToggle("fast");
+    });
+
+    $('*[data-redirect-location]').on( "click", function () {
+        var uri = $(this).data('redirect-location');
+        if ($(this).data('new-window')) {
+            window.open(uri, '_blank');
+        } else {
+            window.location = uri;
+        }
+    });
 });
 
 // --| drag&drop
 
-var MODULE_URL = ADMIN_URL + '/admintools/tool.php?tool=outputfilter_dashboard';
-var ICONS = WB_URL + '/modules/outputfilter_dashboard/images';
-var AJAX_PLUGINS =  WB_URL + '/modules/outputfilter_dashboard/ajax';
+
 
 
 $(function() {
-        // Load external ajax_dragdrop file
-    if($('.dragdrop_form').length > 0){
-        $.insert(AJAX_PLUGINS +"/ajax_dragdrop.js");
-    }
+    // Load external ajax_dragdrop file
+    $.insert(AJAX_PLUGINS +"/ajax.js");
 });
 
 /*
@@ -92,7 +100,7 @@ Original copyright notice follows:
 /**
     Project: CheckTree jQuery Plugin
     Version: 0.22
-    Project Website: http://static.geewax.org/checktree/
+    Project Website: http://static.geewax.org/checktree/index.html
     Author: JJ Geewax <jj@geewax.org>
 
     License:
@@ -786,7 +794,7 @@ if(typeof opf_use_checktrees!='undefined') {
     $("ul.tree2").checkTree_my({labelAction: "check", allChildrenMarksParentChecked: "yes", checkedMarksChildrenChecked: "yes"});
 
     //modules_checktree_visibility();
-    $("input[class=activity]").checkbox({ cls:"activity", empty: WB_URL+"/modules/outputfilter_dashboard/templates/images/empty.gif"});
+    $("input[class=activity]").checkbox({ cls:"activity", empty: IMAGE_URL + "/empty.gif"});
 
 }
 
@@ -850,6 +858,3 @@ if(typeof document.outputfilter!='undefined') {
         document.getElementById('OPF_ID_PAGECHECKTREE').style.display = '';
     }
 }
-
-
-

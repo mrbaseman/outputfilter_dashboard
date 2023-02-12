@@ -8,16 +8,15 @@ functions_outputfilter.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.16
+ * @version         1.6.3
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2021 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010-2023 Christian M. Stefan (Stefek), 2016-2023 Martin Hecht (mrbaseman)
  * @link            https://github.com/mrbaseman/outputfilter_dashboard
- * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
+ * @link            https://addons.wbce.org/pages/addons.php?do=item&item=53
  * @link            https://forum.wbce.org/viewtopic.php?id=176
- * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
- * @platform        WebsiteBaker 2.8.x or WBCE
- * @requirements    PHP 5.4 and higher
+ * @platform        WBCE 1.x
+ * @requirements    PHP 7.4 - 8.2
  *
  * This file is part of OutputFilter-Dashboard, a module for WBCE and Website Baker CMS.
  *
@@ -39,6 +38,7 @@ functions_outputfilter.php
 /*
     File: Filter functions
 */
+
 
 // prevent this file from being accessed directly
 if(!defined('WB_PATH')) die(header('Location: ../index.php'));
@@ -548,16 +548,22 @@ function opf_register_filter($filter, $serialized=FALSE) {
             return(FALSE);
     }
 
-    $fileCheck = opf_replace_sysvar($file,$plugin);
+    $fileCheck = opf_replace_sysvar($file, $plugin);
+    if(is_array($fileCheck) && empty($fileCheck)) $fileCheck = '';
 
-    if(($fileCheck=='' && $func=='') || (($fileCheck!='' && $func!=''))) {
-        trigger_error('File OR Function needed', E_USER_WARNING);
+    if(($fileCheck=='' && $func=='') or ($fileCheck != '' && $func != '')) {
+        trigger_error(
+            'Function (: '.$func.') OR File (: '.$file.') needed',
+            E_USER_WARNING
+        );
         if($force) { // store it nevertheless, but set it inactive
             $active = 0;
             if($func=='') $func = '// Please enter a function.';
-        } else
+        } else {
             return(FALSE);
+        }
     }
+
 
     if($fileCheck && (!file_exists($fileCheck) || !is_file($fileCheck) || !is_readable($fileCheck))) {
         trigger_error("Can\'t read file ($file)", E_USER_WARNING);
@@ -581,7 +587,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
     // insert values into DB
 
     // get next free position for type
-    $position =    opf_db_query_vars( "SELECT MAX(`position`) FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `type`='%s'", $type);
+    $position =    opf_db_query_vars( "SELECT MAX(`position`) FROM `{TP}mod_outputfilter_dashboard` WHERE `type`='%s'", $type);
     if($position===NULL) $position = 0;  // NULL -> no entries
     else ++$position;
 
@@ -594,7 +600,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
         $sql_action = 'UPDATE';
         if($id>0) $sql_where = "WHERE `id`=".(int)$id;
         else $sql_where = "WHERE `name`='".addslashes($name)."'"; // keep this addslashes()-call!
-        $old = opf_db_query( "SELECT * FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` $sql_where");
+        $old = opf_db_query( "SELECT * FROM `{TP}mod_outputfilter_dashboard` $sql_where");
         if($old===FALSE)return(FALSE);
         $old = $old[0];
         $old_type = $old['type'];
@@ -603,7 +609,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
             $position = $old_pos;
         } else { // change of type
             // correct positions for old type
-            opf_db_run_query( "UPDATE `".TABLE_PREFIX."mod_outputfilter_dashboard` SET `position`=`position`-1 WHERE `type`='%s' AND `position`>%d", $old_type, $old_pos);
+            opf_db_run_query( "UPDATE `{TP}mod_outputfilter_dashboard` SET `position`=`position`-1 WHERE `type`='%s' AND `position`>%d", $old_type, $old_pos);
         }
         if($force==FALSE) {
             // update - keep some old values
@@ -619,7 +625,7 @@ function opf_register_filter($filter, $serialized=FALSE) {
      } else {
         $sql_action = 'INSERT INTO';
     }
-    $res = opf_db_run_query( "$sql_action `".TABLE_PREFIX."mod_outputfilter_dashboard` SET
+    $res = opf_db_run_query( "$sql_action `{TP}mod_outputfilter_dashboard` SET
                                              `userfunc`=%d,
                                              `plugin`='%s',
                                              `position`=%d,
@@ -764,7 +770,7 @@ function opf_unregister_filter($name) {
         $pos = opf_get_position($name);
         $type = opf_get_type($name);
         // delete plugin-dir if present
-        if($plugin_dir = opf_db_query_vars( "SELECT `plugin` FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `name`='%s'", $name)) {
+        if($plugin_dir = opf_db_query_vars( "SELECT `plugin` FROM `{TP}mod_outputfilter_dashboard` WHERE `name`='%s'", $name)) {
             if($plugin_dir && file_exists(WB_PATH.'/modules/outputfilter_dashboard/plugins/'.$plugin_dir)) {
                 // uninstall.php present? include it
                 if(file_exists(WB_PATH.'/modules/outputfilter_dashboard/plugins/'.$plugin_dir.'/plugin_uninstall.php'))
@@ -772,14 +778,14 @@ function opf_unregister_filter($name) {
                 opf_io_rmdir(WB_PATH.'/modules/outputfilter_dashboard/plugins/'.$plugin_dir);
             }
         }
-        $res = opf_db_run_query( "DELETE FROM `".TABLE_PREFIX."mod_outputfilter_dashboard` WHERE `name`='%s'", $name);
+        $res = opf_db_run_query( "DELETE FROM `{TP}mod_outputfilter_dashboard` WHERE `name`='%s'", $name);
         if($res) {
             if(class_exists('Settings') && defined('WBCE_VERSION')){
                 Settings::Del( opf_filter_name_to_setting($name));
                 Settings::Del( opf_filter_name_to_setting($name).'_be');
             }
 
-            if(opf_db_run_query( "UPDATE `".TABLE_PREFIX."mod_outputfilter_dashboard` SET `position`=`position`-1
+            if(opf_db_run_query( "UPDATE `{TP}mod_outputfilter_dashboard` SET `position`=`position`-1
                       WHERE `type`='%s' AND `position`>%d", $type, $pos))
             return(TRUE);
         }
@@ -1093,7 +1099,7 @@ function opf_add_class(&$content, $class, $tag) {
 function opf_add_class_to_class(&$content, $class, $present_class, $tag='') {
     if(!is_string($content)) { trigger_error('opf_add_class_to_class(): content is not a string', E_USER_WARNING); return(FALSE); }
     if($tag!='') $tag .= ' ';
-    $res = preg_replace("~(<${tag}[^<>]*class\s*=\s*\"[^\"<>]*$present_class)([^\"<>]*\")~iU",'$1 '.$class.'$2',$content);
+    $res = preg_replace("~(<{$tag}[^<>]*class\s*=\s*\"[^\"<>]*$present_class)([^\"<>]*\")~iU",'$1 '.$class.'$2',$content);
     if($res===NULL)
         return(FALSE);
     $content = $res;
@@ -1129,7 +1135,7 @@ function opf_add_class_to_attr(&$content, $class, $attr, $value, $tag='') {
     if($attr=='class')
         return(opf_add_class_to_class($content, $class, $value, $tag));
     if(!is_string($content)) { trigger_error('opf_add_class_to_attr(): content is not a string', E_USER_WARNING); return(FALSE); }
-    $res = preg_replace("~<(${tag}[^ ]*?)(?:([^<>]*)(?:class\s*=\s*\"([^\"]*)\")?([^<>]*$attr\s*=\s*\"\s*$value\s*\"[^<>]*)(?(3)|class\s*=\s*\"([^\"]*)\")([^<>]*)|([^<>]*$attr\s*=\s*\"\s*$value\s*\"[^<>]*))>~iU", '<$1 class="$3$5 '.$class.'" $4 $2$6$7>', $content);
+    $res = preg_replace("~<({$tag}[^ ]*?)(?:([^<>]*)(?:class\s*=\s*\"([^\"]*)\")?([^<>]*$attr\s*=\s*\"\s*$value\s*\"[^<>]*)(?(3)|class\s*=\s*\"([^\"]*)\")([^<>]*)|([^<>]*$attr\s*=\s*\"\s*$value\s*\"[^<>]*))>~iU", '<$1 class="$3$5 '.$class.'" $4 $2$6$7>', $content);
     if($res===NULL)
         return(FALSE);
     $content = $res;
@@ -1597,5 +1603,3 @@ function opf_filter_get_additional_values() {
 function opf_filter_name_to_setting($name) {
     return "opf_" . preg_replace('/[^a-z_]/','', str_replace(' ','_', strtolower($name)));
 }
-
-

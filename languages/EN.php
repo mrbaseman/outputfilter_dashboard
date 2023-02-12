@@ -8,16 +8,15 @@ languages/EN.php
  *
  * @category        tool
  * @package         Outputfilter Dashboard
- * @version         1.5.16
+ * @version         1.6.3
  * @authors         Thomas "thorn" Hornik <thorn@nettest.thekk.de>, Christian M. Stefan (Stefek) <stefek@designthings.de>, Martin Hecht (mrbaseman) <mrbaseman@gmx.de>
- * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010 Christian M. Stefan (Stefek), 2021 Martin Hecht (mrbaseman)
+ * @copyright       (c) 2009,2010 Thomas "thorn" Hornik, 2010-2023 Christian M. Stefan (Stefek), 2016-2023 Martin Hecht (mrbaseman)
  * @link            https://github.com/mrbaseman/outputfilter_dashboard
- * @link            http://forum.websitebaker.org/index.php/topic,28926.0.html
+ * @link            https://addons.wbce.org/pages/addons.php?do=item&item=53
  * @link            https://forum.wbce.org/viewtopic.php?id=176
- * @link            http://addons.wbce.org/pages/addons.php?do=item&item=53
  * @license         GNU General Public License, Version 3
- * @platform        WebsiteBaker 2.8.x or WBCE
- * @requirements    PHP 5.4 and higher
+ * @platform        WBCE 1.x
+ * @requirements    PHP 7.4 - 8.2
  *
  * This file is part of OutputFilter-Dashboard, a module for WBCE and Website Baker CMS.
  *
@@ -56,6 +55,8 @@ $LANG['MOD_OPF']['TXT_SUB_PAGES'] = 'Select or deselect Pages/Subpages below.<br
 
 $LANG['MOD_OPF']['TXT_FILTER_FUNC'] = 'Enter the filter-function below.';
 
+$LANG['MOD_OPF']['TXT_DELETE_FILTER_X'] = 'Really delete filter "%s"?';
+
 $LANG['MOD_OPF']['TXT_FILTER_CONF'] = 'Filter configuration';
 
 $LANG['MOD_OPF']['TXT_FILTER_DESC'] = 'Filter Description';
@@ -76,7 +77,7 @@ $LANG['MOD_OPF']['TXT_FILTER_OUTPUT_SETTINGS'] = 'Filter Output-Settings (Pages/
 
 $LANG['MOD_OPF']['TXT_TYPE'] = 'Type';
 
-$LANG['MOD_OPF']['TXT_FILTER_MODULES'] = 'Apply filter to these modules';
+$LANG['MOD_OPF']['TXT_FILTER_MODULES'] = 'Apply filter to these section modules';
 
 $LANG['MOD_OPF']['TXT_FILTER_PAGES'] = 'Apply filter to these pages';
 
@@ -114,7 +115,7 @@ $LANG['MOD_OPF']['TXT_DOWNLOAD_FAILED'] = 'Download Failed';
 
 $LANG['MOD_OPF']['TXT_UPLOAD_SUCCESS'] = 'Upload Successful';
 
-$LANG['MOD_OPF']['TXT_OUTPUTFILTER_DASHBOARD'] = 'OutputFilter - Dashboard';
+$LANG['MOD_OPF']['TXT_OUTPUTFILTER_DASHBOARD'] = 'OutputFilter Dashboard';
 
 $LANG['MOD_OPF']['TXT_PATCH_COREFILES'] = 'You need to patch two core-files to make this AdminTool work. <a href = "%s">Please read documentation</a>';
 
@@ -160,7 +161,7 @@ $LANG['MOD_OPF']['TXT_MOVE_DOWN'] = 'Move down';
 
 $LANG['MOD_OPF']['TXT_DELETE_FILTER'] = 'Delete Filter';
 
-$LANG['MOD_OPF']['TXT_SURE_TO_DELETE'] = 'Are you sure you want to delete the following filter<br /><b>%s</b>?';
+$LANG['MOD_OPF']['TXT_SURE_TO_DELETE'] = 'Are you sure you want to delete the filter \'<b>%s</b>\'?';
 
 $LANG['MOD_OPF']['TXT_CONVERT_FILTER'] = 'Convert filter to plugin';
 
